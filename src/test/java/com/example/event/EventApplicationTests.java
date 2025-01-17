@@ -13,18 +13,13 @@ class EventApplicationTests {
 	}
 
 	@Test
-	@DisplayName("사용자는 티켓 예약 및 결제를 진행할 수 있습니다.")
-	void reserveTicket(){
+	@DisplayName("사용자는 3분 이내에 판매 중인 티켓에 대해 결제할 수 있습니다.")
+	void buyTicket(){
 	}
 
 	@Test
-	@DisplayName("사용자는 예약 확정된 티켓에 대해 이벤트 시작 24시간 전까지 취소가 가능합니다.")
+	@DisplayName("사용자는 공연 시작 1시간 전 예약 확정된 티켓에 대해 취소가 가능합니다.")
 	void cancelTicket(){
-	}
-
-	@Test
-	@DisplayName("환불 규정에 따라 일주일 전 취소한 티켓의 경우 100%, 3일전의 경우 50% 환불이 가능하며, 당일 환불은 불가합니다. ")
-	void refundTicketPrice(){
 	}
 
 	/*
