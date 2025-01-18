@@ -1,15 +1,14 @@
 package com.example.event.domain;
 
-import lombok.AllArgsConstructor;
+import com.example.event.domain.value.HostManager;
 
-@AllArgsConstructor
-public class Host {
+public final class Host {
 
-    private String hostName;
+    private final String hostName;
+    private final HostManager hostManager;
 
-    private String managerName;
-
-    private String mangerEmail;
-
-    private String managerPhoneNumber;
+    public Host(String hostName, HostManager hostManager) {
+        this.hostName = hostName;
+        this.hostManager = hostManager;
+    }
 }

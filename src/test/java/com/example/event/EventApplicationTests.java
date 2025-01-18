@@ -1,11 +1,7 @@
 package com.example.event;
 
-import com.example.event.domain.Event;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
 
 class EventApplicationTests {
 

@@ -2,16 +2,18 @@ package com.example.event.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 public class Ticket {
 
-    private int price;
+    private final int price;
 
-    private TicketStatus status;
+    private final TicketStatus status;
 
-    private List<TicketType> type;
+    private final TicketType type;
 
-    private LocalDateTime releaseDateTime;
+    private final LocalDateTime releaseDateTime;
 
-    private LocalDateTime deadLineDateTime;
+    private final LocalDateTime deadLineDateTime;
 }

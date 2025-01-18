@@ -15,14 +15,15 @@ class EventTest {
         int totalTicketNumber = 0;
 
         //when & then
-        Assertions.assertThatThrownBy(() -> EventTestFixtures.createEventWithTotalTicketNumber(totalTicketNumber))
+        Assertions.assertThatThrownBy(
+                () -> EventTestFixtures.createEventWithTotalTicketNumber(totalTicketNumber))
             .isInstanceOf(EventCreateTicketNegativeException.class)
             .hasMessage("Number of Ticket can't zero or negative");
     }
 
     @Test
     @DisplayName("이벤트는 종료 시간이 시작 시간보다 빠를 수 없습니다.")
-    public void addEventDuration()  {
+    public void addEventDuration() {
 
         //given
 
@@ -34,7 +35,7 @@ class EventTest {
 
     @Test
     @DisplayName("관리자는 현재 시간보다 3일 이상 남은 이벤트에 대해서만 새로운 이벤트를 생성할 수 있다.")
-    public void addEventStartDateTime()  {
+    public void addEventStartDateTime() {
 
         //given
 
