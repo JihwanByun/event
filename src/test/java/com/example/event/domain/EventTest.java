@@ -1,7 +1,12 @@
 package com.example.event.domain;
 
 import com.example.event.EventTestFixtures;
+import com.example.event.HostTestFixtures;
+import com.example.event.SponsorTestFixtures;
+import com.example.event.domain.value.Sponsor;
+import com.example.event.domain.value.Venue;
 import com.example.event.exception.event.EventCreateTicketNegativeException;
+import java.time.LocalDateTime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +21,14 @@ class EventTest {
 
         //when & then
         Assertions.assertThatThrownBy(
-                () -> EventTestFixtures.createEventWithTotalTicketNumber(totalTicketNumber))
+                () -> Event.createEvent(EventTestFixtures.EVENT_NAME,
+                    EventTestFixtures.EVENT_VENUE,
+                    HostTestFixtures.createHost(),
+                    SponsorTestFixtures.createSponsor(),
+                    totalTicketNumber,
+                    EventTestFixtures.startDateTime,
+                    EventTestFixtures.endDateTime
+                ))
             .isInstanceOf(EventCreateTicketNegativeException.class)
             .hasMessage("Number of Ticket can't zero or negative");
     }

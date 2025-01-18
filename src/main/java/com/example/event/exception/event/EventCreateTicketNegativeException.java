@@ -5,7 +5,7 @@ import com.example.event.exception.ErrorCode;
 
 public class EventCreateTicketNegativeException extends BusinessException {
 
-    public EventCreateTicketNegativeException(){
+    public EventCreateTicketNegativeException() {
         super(ErrorCode.EVENT_TICKET_CREATE_ERROR);
     }
 }

@@ -27,8 +27,6 @@ class EventApplicationTests {
 	 */
 
 
-
-
     @Test
     @DisplayName("관리자는 좌석 및 티켓의 종류와 종류별 판매량을 정할 수 있습니다.")
     void decideTotalTicket() {

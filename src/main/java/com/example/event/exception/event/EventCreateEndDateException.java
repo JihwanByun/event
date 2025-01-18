@@ -5,7 +5,7 @@ import com.example.event.exception.ErrorCode;
 
 public class EventCreateEndDateException extends BusinessException {
 
-    public EventCreateEndDateException(){
+    public EventCreateEndDateException() {
         super(ErrorCode.EVENT_ENDDATE_CREATE_ERROR);
     }
 }
