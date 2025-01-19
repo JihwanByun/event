@@ -4,7 +4,7 @@ package com.example.event.domain;
 import com.example.event.domain.value.Sponsor;
 import com.example.event.domain.value.Venue;
 import com.example.event.exception.event.EventCreateEndDateException;
-import com.example.event.exception.event.EventCreateOpenDateException;
+import com.example.event.exception.event.EventCreateStartDateException;
 import com.example.event.exception.event.EventCreateTicketNegativeException;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public final class Event {
 
     public static void validateStartDateTime(LocalDateTime startDateTime) {
         if (startDateTime.isBefore(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3))) {
-            throw new EventCreateOpenDateException();
+            throw new EventCreateStartDateException();
         }
     }
 
