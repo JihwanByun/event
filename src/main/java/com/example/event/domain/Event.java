@@ -16,12 +16,13 @@ import java.time.ZoneId;
 
 public final class Event {
 
+    @Getter
     private final String eventName;
-
+    @Getter
     private final Venue venue;
-
+    @Getter
     private final Host host;
-
+    @Getter
     private final Sponsor sponsor;
 
     @Getter
