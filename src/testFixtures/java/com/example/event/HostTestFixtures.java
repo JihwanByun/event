@@ -1,5 +1,7 @@
 package com.example.event;
 
+import com.example.event.domain.value.HostName;
+import com.example.event.domain.value.ManagerName;
 import com.example.event.domain.value.PhoneNumber;
 import com.example.event.domain.value.Host;
 import com.example.event.domain.value.HostManager;
@@ -12,7 +14,7 @@ public class HostTestFixtures {
         Email email = new Email("host@mail.com");
         PhoneNumber phoneNumber = new PhoneNumber("010-0000-0000");
 
-        HostManager hostManager = new HostManager("김담당자", email, phoneNumber);
-        return new Host("떡잎호스트", hostManager);
+        HostManager hostManager = new HostManager(new ManagerName("김담당자"), email, phoneNumber);
+        return new Host(new HostName("문화체육관광부"), hostManager);
     }
 }
