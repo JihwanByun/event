@@ -5,11 +5,11 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class Ticket {
+public final class Ticket {
 
     private final int price;
 
-    private final TicketStatus status;
+    private TicketStatus status;
 
     private final TicketType type;
 

@@ -2,7 +2,7 @@ package com.example.event;
 
 import com.example.event.domain.Event;
 import com.example.event.domain.value.Venue;
-import com.example.event.domain.Host;
+import com.example.event.domain.value.Host;
 import java.time.LocalDateTime;
 
 public class EventTestFixtures {

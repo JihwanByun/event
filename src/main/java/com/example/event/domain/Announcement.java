@@ -1,20 +1,19 @@
 package com.example.event.domain;
 
-import com.example.event.domain.value.CautionMessage;
 import com.example.event.domain.value.EventPhoto;
 import java.util.List;
 
 public final class Announcement {
 
-    private final CautionMessage caution;
+    private final String cautionMessage;
 
     private final List<EventPhoto> eventPhotos;
 
     private final EventPhoto directionsPhoto;
 
-    public Announcement(CautionMessage caution, List<EventPhoto> eventPhotos,
+    public Announcement(String cautionMessage, List<EventPhoto> eventPhotos,
         EventPhoto directionsPhoto) {
-        this.caution = caution;
+        this.cautionMessage = cautionMessage;
         this.eventPhotos = eventPhotos;
         this.directionsPhoto = directionsPhoto;
     }

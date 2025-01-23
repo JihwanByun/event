@@ -1,7 +1,7 @@
 package com.example.event;
 
 import com.example.event.domain.value.PhoneNumber;
-import com.example.event.domain.Host;
+import com.example.event.domain.value.Host;
 import com.example.event.domain.value.HostManager;
 import com.example.event.domain.value.Email;
 

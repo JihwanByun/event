@@ -1,6 +1,7 @@
 package com.example.event.domain;
 
 
+import com.example.event.domain.value.Host;
 import com.example.event.domain.value.Sponsor;
 import com.example.event.domain.value.Venue;
 import com.example.event.exception.event.EventCreateEndDateException;
