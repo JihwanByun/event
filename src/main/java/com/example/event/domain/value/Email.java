@@ -4,7 +4,7 @@ import com.example.event.exception.value.EmailCreateException;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public final class Email {
+public class Email {
 
     private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
     private static final Pattern PATTERN = Pattern.compile(EMAIL_REGEX);

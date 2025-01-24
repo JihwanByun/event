@@ -1,6 +1,6 @@
 package com.example.event.domain.value;
 
-public final class Host {
+public class Host {
 
     private final HostName name;
 

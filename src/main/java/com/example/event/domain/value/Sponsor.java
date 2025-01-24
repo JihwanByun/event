@@ -4,7 +4,7 @@ import java.util.Objects;
 import lombok.Getter;
 
 
-public final class Sponsor {
+public class Sponsor {
 
     @Getter
     private final String sponsorInfo;

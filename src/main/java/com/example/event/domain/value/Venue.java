@@ -2,7 +2,7 @@ package com.example.event.domain.value;
 
 import java.util.Objects;
 
-public final class Venue {
+public class Venue {
 
     private final String name;
     private final int seatingCapacity;

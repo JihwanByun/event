@@ -2,7 +2,7 @@ package com.example.event.domain.value;
 
 import lombok.Getter;
 
-public final class HostManager {
+public class HostManager {
 
     @Getter
     private final ManagerName name;

@@ -3,7 +3,7 @@ package com.example.event.domain;
 import com.example.event.domain.value.EventPhoto;
 import java.util.List;
 
-public final class Announcement {
+public class Announcement {
 
     private final String cautionMessage;
 

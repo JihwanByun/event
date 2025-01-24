@@ -3,7 +3,7 @@ package com.example.event.domain.value;
 import java.util.Objects;
 import lombok.Getter;
 
-public final class EventPhoto {
+public class EventPhoto {
 
     @Getter
     private final String url;
