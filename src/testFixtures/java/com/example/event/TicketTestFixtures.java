@@ -6,13 +6,13 @@ import java.time.LocalDateTime;
 
 public class TicketTestFixtures {
 
-    private static final int price = 100;
-    private static final TicketType typeVIP = new TicketType("VIP");
-    private static final LocalDateTime releaseDateTime = LocalDateTime.now();
-    private static final LocalDateTime deadLineDateTime = LocalDateTime.now().plusDays(3);
+    public static final int price = 100;
+    public static final TicketType typeVIP = new TicketType("VIP");
+    public static final LocalDateTime releaseDateTime = LocalDateTime.now();
+    public static final LocalDateTime deadLineDateTime = LocalDateTime.now().plusDays(3);
 
     public static Ticket createTicket(){
-        return Ticket.createTicket(price, typeVIP, releaseDateTime, deadLineDateTime);
+        return Ticket.createTicketNotReleased(price, typeVIP, releaseDateTime, deadLineDateTime);
     }
 
 

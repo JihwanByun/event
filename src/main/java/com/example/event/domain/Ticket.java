@@ -1,21 +1,25 @@
 package com.example.event.domain;
 
 import com.example.event.domain.value.TicketType;
+import com.example.event.exception.ticket.TicketPriceNegativeException;
+import com.example.event.exception.ticket.TicketReleasedDateTimeException;
 import java.time.LocalDateTime;
+import lombok.Getter;
 
 public class Ticket {
 
+    @Getter
     private final int price;
-
+    @Getter
     private TicketStatus status;
-
+    @Getter
     private final TicketType type;
-
+    @Getter
     private final LocalDateTime releaseDateTime;
-
+    @Getter
     private final LocalDateTime deadLineDateTime;
 
-    private LocalDateTime payDateTime;
+    private LocalDateTime paymentDateTime;
 
     private LocalDateTime refundDateTime;
 
@@ -23,25 +27,20 @@ public class Ticket {
         LocalDateTime deadLineDateTime) {
         this.price = price;
         this.type = type;
+        this.status = TicketStatus.NOT_RELEASED;
         this.releaseDateTime = releaseDateTime;
         this.deadLineDateTime = deadLineDateTime;
     }
 
-    public static Ticket createTicket(int price, TicketType type, LocalDateTime releaseDateTime,
-        LocalDateTime deadLineDateTime) {
-
-        return new Ticket(price, type, releaseDateTime, deadLineDateTime);
+    public void setTicketStatusForSale() {
+        this.status = TicketStatus.FOR_SALE;
     }
 
-    public void setTicketStatusForSale(Ticket ticket) {
-        ticket.status = TicketStatus.FOR_SALE;
+    public void setTicketStatusNotReleased() {
+        this.status = TicketStatus.NOT_RELEASED;
     }
 
-    public void setTicketStatusNotReleased(Ticket ticket) {
-        ticket.status = TicketStatus.NOT_RELEASED;
-    }
-
-    public void setTicketStatusSold(Ticket ticket) {
-        ticket.status = TicketStatus.SOLD;
+    public void setTicketStatusSold() {
+        this.status = TicketStatus.SOLD;
     }
 }

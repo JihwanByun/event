@@ -9,6 +9,9 @@ public enum ErrorCode {
     EVENT_STARTDATE_CREATE_ERROR(400, "Event can be hold more in 3 Days"),
     EVENT_ENDDATE_CREATE_ERROR(400, "Event can be hold after open time"),
 
+    //Ticket
+    TICKET_PRICE_ERROR(400, "Ticket Price can't be negative"),
+    TICKET_RELEASED_DATETIME_ERROR(400, "티켓 발매 시각은 이벤트 시작일 이전 30일 부터 1일전까지만 가능합니다."),
     //Email
     EMAIL_FORMAT_ERROR(400, "Follow the email format [@와 .을 포함한 이메일 형식을 지키세요]"),
 

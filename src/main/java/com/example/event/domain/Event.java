@@ -3,10 +3,13 @@ package com.example.event.domain;
 
 import com.example.event.domain.value.Host;
 import com.example.event.domain.value.Sponsor;
+import com.example.event.domain.value.TicketType;
 import com.example.event.domain.value.Venue;
 import com.example.event.exception.event.EventCreateEndDateException;
 import com.example.event.exception.event.EventCreateStartDateException;
 import com.example.event.exception.event.EventCreateTicketNegativeException;
+import com.example.event.exception.ticket.TicketPriceNegativeException;
+import com.example.event.exception.ticket.TicketReleasedDateTimeException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -55,29 +58,33 @@ public final class Event {
     public static Event createEvent(String eventName, Venue venue, Host host, Sponsor sponsor,
         int totalTicketNumber, LocalDateTime startDateTime, LocalDateTime endDateTime,
         Announcement announcement) {
-        validateTotalTicketNumber(totalTicketNumber);
-        validateStartDateTime(startDateTime);
-        validateEventDurationTime(startDateTime, endDateTime);
+        if (!isValidTotalTicketNumber(totalTicketNumber)) {
+            throw new EventCreateTicketNegativeException();
+        }
+        if (!isValidEventStartDateTime(startDateTime)) {
+            throw new EventCreateStartDateException();
+        }
+        if (!isValidEventDuration(startDateTime, endDateTime)) {
+            throw new EventCreateEndDateException();
+        }
         return new Event(eventName, venue, host, sponsor, totalTicketNumber, startDateTime,
             endDateTime, announcement);
     }
 
-    public static void validateTotalTicketNumber(int totalTicketCnt) {
-        if (totalTicketCnt <= 0) {
-            throw new EventCreateTicketNegativeException();
-        }
+    public static boolean isValidTotalTicketNumber(int totalTicketCnt) {
+        return totalTicketCnt > 0;
     }
 
-    public static void validateStartDateTime(LocalDateTime startDateTime) {
-        if (startDateTime.isBefore(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3))) {
-            throw new EventCreateStartDateException();
-        }
+    public static boolean isValidEventStartDateTime(LocalDateTime startDateTime) {
+        return startDateTime.isBefore(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3));
     }
 
-    public static void validateEventDurationTime(LocalDateTime startDateTime,
+    public static boolean isValidEventDuration(LocalDateTime startDateTime,
         LocalDateTime endDateTime) {
-        if (endDateTime.isBefore(startDateTime)) {
-            throw new EventCreateEndDateException();
-        }
+        return endDateTime.isBefore(startDateTime);
+    }
+
+    public static boolean isValidPrice(int price) {
+        return price > 0;
     }
 }
