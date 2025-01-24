@@ -1,5 +1,6 @@
 package com.example.event;
 
+import com.example.event.domain.Announcement;
 import com.example.event.domain.Event;
 import com.example.event.domain.value.Sponsor;
 import com.example.event.domain.value.Venue;
@@ -15,10 +16,12 @@ public class EventTestFixtures {
     public static final LocalDateTime endDateTime = LocalDateTime.of(2050, 12, 12, 12, 12);
     public static final int totalTicketNumber = 100;
     public static final Sponsor sponsor = new Sponsor("미래재단");
+    public static final Announcement announcement = AnnouncementTestFixtures.createAnnouncement();
 
     public static Event createEvent() {
         return Event.createEvent(EVENT_NAME, eventVenue, HostTestFixtures.createHost(),
-            SponsorTestFixtures.createSponsor(), totalTicketNumber, startDateTime, endDateTime);
+            SponsorTestFixtures.createSponsor(), totalTicketNumber, startDateTime, endDateTime,
+            announcement);
     }
 }
 

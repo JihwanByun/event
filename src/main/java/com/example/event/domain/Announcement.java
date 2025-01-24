@@ -2,6 +2,7 @@ package com.example.event.domain;
 
 import com.example.event.domain.value.EventPhoto;
 import java.util.List;
+import org.springframework.lang.Nullable;
 
 public class Announcement {
 

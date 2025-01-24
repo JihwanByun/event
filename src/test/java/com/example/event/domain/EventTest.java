@@ -1,8 +1,6 @@
 package com.example.event.domain;
 
 import com.example.event.EventTestFixtures;
-import com.example.event.HostTestFixtures;
-import com.example.event.SponsorTestFixtures;
 import com.example.event.domain.value.Host;
 import com.example.event.domain.value.Sponsor;
 import com.example.event.domain.value.Venue;
@@ -10,7 +8,6 @@ import com.example.event.exception.event.EventCreateEndDateException;
 import com.example.event.exception.event.EventCreateStartDateException;
 import com.example.event.exception.event.EventCreateTicketNegativeException;
 import java.time.LocalDateTime;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -28,6 +25,7 @@ class EventTest {
         Sponsor sponsor = EventTestFixtures.sponsor;
         LocalDateTime eventStartDateTime = EventTestFixtures.startDateTime;
         LocalDateTime eventEndDateTime = EventTestFixtures.endDateTime;
+        Announcement announcement = EventTestFixtures.announcement;
         //when
         int totalTicketNumber = 0;
 
@@ -35,7 +33,7 @@ class EventTest {
         assertThatThrownBy(
             () -> Event.createEvent(eventName, eventVenue, host, sponsor,
                 totalTicketNumber,
-                eventStartDateTime, eventEndDateTime))
+                eventStartDateTime, eventEndDateTime, announcement))
             .isInstanceOf(EventCreateTicketNegativeException.class)
             .hasMessage(EventCreateTicketNegativeException.MESSAGE);
     }
@@ -51,6 +49,7 @@ class EventTest {
         Sponsor sponsor = EventTestFixtures.sponsor;
         LocalDateTime eventStartDateTime = EventTestFixtures.startDateTime;
         int totalTicketNumber = EventTestFixtures.totalTicketNumber;
+        Announcement announcement = EventTestFixtures.announcement;
 
         //when
         LocalDateTime eventEndDateTime = eventStartDateTime.minusDays(1);
@@ -59,7 +58,7 @@ class EventTest {
         assertThatThrownBy(
             () -> Event.createEvent(eventName, eventVenue, host, sponsor, totalTicketNumber,
                 eventStartDateTime,
-                eventEndDateTime))
+                eventEndDateTime, announcement))
             .isInstanceOf(EventCreateEndDateException.class)
             .hasMessage(EventCreateEndDateException.MESSAGE);
     }
@@ -73,6 +72,7 @@ class EventTest {
         Host host = EventTestFixtures.host;
         Sponsor sponsor = EventTestFixtures.sponsor;
         int totalTicketNumber = EventTestFixtures.totalTicketNumber;
+        Announcement announcement = EventTestFixtures.announcement;
 
         //when
         LocalDateTime eventStartDateTime = LocalDateTime.now().plusDays(2);
@@ -81,7 +81,7 @@ class EventTest {
         //then
         assertThatThrownBy(
             () -> Event.createEvent(eventName, eventVenue, host, sponsor, totalTicketNumber,
-                eventStartDateTime, eventEndDateTime))
+                eventStartDateTime, eventEndDateTime, announcement))
             .isInstanceOf(EventCreateStartDateException.class)
             .hasMessage(EventCreateStartDateException.MESSAGE);
     }
@@ -96,6 +96,7 @@ class EventTest {
         Venue eventVenue = EventTestFixtures.eventVenue;
         Host host = EventTestFixtures.host;
         Sponsor sponsor = EventTestFixtures.sponsor;
+        Announcement announcement = EventTestFixtures.announcement;
 
         //when
         LocalDateTime eventStartDateTime = LocalDateTime.now().plusDays(4);
@@ -103,7 +104,8 @@ class EventTest {
         int totalTicketNumber = 1;
         Event event = Event.createEvent(eventName, eventVenue, host, sponsor, totalTicketNumber,
             eventStartDateTime,
-            eventEndDateTime);
+            eventEndDateTime,
+            announcement);
 
         //then
         assertThat(event).isNotNull();
