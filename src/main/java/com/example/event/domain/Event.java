@@ -8,15 +8,13 @@ import com.example.event.domain.value.Venue;
 import com.example.event.exception.event.EventCreateEndDateException;
 import com.example.event.exception.event.EventCreateStartDateException;
 import com.example.event.exception.event.EventCreateTicketNegativeException;
-import com.example.event.exception.ticket.TicketPriceNegativeException;
-import com.example.event.exception.ticket.TicketReleasedDateTimeException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import org.springframework.lang.Nullable;
 
 public final class Event {
 
@@ -28,63 +26,66 @@ public final class Event {
     private final Host host;
     @Getter
     private final Sponsor sponsor;
-
     @Getter
-    private final int totalTicketNumber;
-
-    private final List<Ticket> tickets;
-
+    private final TicketInventory ticketInventory;
     @Getter
     private final LocalDateTime startDateTime;
     @Getter
     private final LocalDateTime endDateTime;
-
     @Getter
     private final Announcement announcement; //선택 필드
 
-    private Event(String eventName, Venue venue, Host host, Sponsor sponsor, int totalTicketNumber,
+    private Event(String eventName, Venue venue, Host host, Sponsor sponsor,
+        TicketInventory tickets,
         LocalDateTime startDateTime, LocalDateTime endDateTime, Announcement announcement) {
         this.eventName = eventName;
         this.venue = venue;
         this.host = host;
         this.sponsor = sponsor;
-        this.totalTicketNumber = totalTicketNumber;
-        this.tickets = new ArrayList<>();
+        this.ticketInventory = tickets;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.announcement = announcement;
     }
 
     public static Event createEvent(String eventName, Venue venue, Host host, Sponsor sponsor,
-        int totalTicketNumber, LocalDateTime startDateTime, LocalDateTime endDateTime,
+        TicketInventory ticketInventory
+        , LocalDateTime startDateTime, LocalDateTime endDateTime,
         Announcement announcement) {
-        if (!isValidTotalTicketNumber(totalTicketNumber)) {
-            throw new EventCreateTicketNegativeException();
-        }
-        if (!isValidEventStartDateTime(startDateTime)) {
-            throw new EventCreateStartDateException();
-        }
-        if (!isValidEventDuration(startDateTime, endDateTime)) {
-            throw new EventCreateEndDateException();
-        }
-        return new Event(eventName, venue, host, sponsor, totalTicketNumber, startDateTime,
+
+        int totalTicketQuantity = ticketInventory.getTotalTicketQuantity();
+        validateTotalTicketNumber(totalTicketQuantity);
+        validateStartDateTime(startDateTime);
+        validateEventDuration(startDateTime, endDateTime);
+        return new Event(eventName, venue, host, sponsor, ticketInventory, startDateTime,
             endDateTime, announcement);
     }
 
-    public static boolean isValidTotalTicketNumber(int totalTicketCnt) {
-        return totalTicketCnt > 0;
+    public static void validateTotalTicketNumber(int totalTicketCnt) {
+        if (totalTicketCnt <= 0) {
+            throw new EventCreateTicketNegativeException();
+        }
     }
 
-    public static boolean isValidEventStartDateTime(LocalDateTime startDateTime) {
-        return startDateTime.isBefore(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3));
+    public static void validateStartDateTime(LocalDateTime startDateTime) {
+        if (startDateTime.isAfter(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3))) {
+            throw new EventCreateStartDateException();
+        }
     }
 
-    public static boolean isValidEventDuration(LocalDateTime startDateTime,
+    public static void validateEventDuration(LocalDateTime startDateTime,
         LocalDateTime endDateTime) {
-        return endDateTime.isBefore(startDateTime);
+        if (endDateTime.isBefore(startDateTime) || endDateTime.equals(startDateTime)) {
+            throw new EventCreateEndDateException();
+        }
     }
 
-    public static boolean isValidPrice(int price) {
-        return price > 0;
+    public void enrollTicketOfEvent(TicketType ticketType, int stock, int price,
+        LocalDateTime releaseDateTime,
+        LocalDateTime deadLineDateTime) {
+
+        ticketInventory.addTickets(ticketType, stock, price, releaseDateTime, deadLineDateTime);
+
     }
+
 }

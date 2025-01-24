@@ -11,9 +11,4 @@ public class TicketTestFixtures {
     public static final LocalDateTime releaseDateTime = LocalDateTime.now();
     public static final LocalDateTime deadLineDateTime = LocalDateTime.now().plusDays(3);
 
-    public static Ticket createTicket(){
-        return Ticket.createTicketNotReleased(price, typeVIP, releaseDateTime, deadLineDateTime);
-    }
-
-
 }

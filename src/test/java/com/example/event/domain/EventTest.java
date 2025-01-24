@@ -50,7 +50,7 @@ class EventTest {
         Host host = EventTestFixtures.host;
         Sponsor sponsor = EventTestFixtures.sponsor;
         LocalDateTime eventStartDateTime = EventTestFixtures.startDateTime;
-        int totalTicketNumber = EventTestFixtures.totalTicketNumber;
+        TicketInventory ticketInventory = EventTestFixtures.tickets;
         Announcement announcement = EventTestFixtures.announcement;
 
         //when
@@ -58,7 +58,7 @@ class EventTest {
 
         //when & then
         assertThatThrownBy(
-            () -> Event.createEvent(eventName, eventVenue, host, sponsor, totalTicketNumber,
+            () -> Event.createEvent(eventName, eventVenue, host, sponsor, ticketInventory,
                 eventStartDateTime,
                 eventEndDateTime, announcement))
             .isInstanceOf(EventCreateEndDateException.class)
@@ -73,7 +73,7 @@ class EventTest {
         Venue eventVenue = EventTestFixtures.eventVenue;
         Host host = EventTestFixtures.host;
         Sponsor sponsor = EventTestFixtures.sponsor;
-        int totalTicketNumber = EventTestFixtures.totalTicketNumber;
+        TicketInventory tickets = EventTestFixtures.tickets;
         Announcement announcement = EventTestFixtures.announcement;
 
         //when
@@ -82,7 +82,7 @@ class EventTest {
 
         //then
         assertThatThrownBy(
-            () -> Event.createEvent(eventName, eventVenue, host, sponsor, totalTicketNumber,
+            () -> Event.createEvent(eventName, eventVenue, host, sponsor, tickets,
                 eventStartDateTime, eventEndDateTime, announcement))
             .isInstanceOf(EventCreateStartDateException.class)
             .hasMessage(EventCreateStartDateException.MESSAGE);
@@ -103,8 +103,8 @@ class EventTest {
         //when
         LocalDateTime eventStartDateTime = LocalDateTime.now().plusDays(4);
         LocalDateTime eventEndDateTime = eventStartDateTime.plusDays(1);
-        int totalTicketNumber = 1;
-        Event event = Event.createEvent(eventName, eventVenue, host, sponsor, totalTicketNumber,
+        TicketInventory ticketInventory = new TicketInventory();
+        Event event = Event.createEvent(eventName, eventVenue, host, sponsor, ticketInventory,
             eventStartDateTime,
             eventEndDateTime,
             announcement);
@@ -115,7 +115,7 @@ class EventTest {
         assertThat(event.getVenue()).isEqualTo(eventVenue);
         assertThat(event.getHost()).isEqualTo(host);
         assertThat(event.getSponsor()).isEqualTo(sponsor);
-        assertThat(event.getTotalTicketNumber()).isEqualTo(totalTicketNumber);
+        assertThat(event.getTicketInventory()).isEqualTo(ticketInventory);
         assertThat(event.getStartDateTime()).isEqualTo(eventStartDateTime);
         assertThat(event.getEndDateTime()).isEqualTo(eventEndDateTime);
     }

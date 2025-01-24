@@ -23,7 +23,13 @@ public class Ticket {
 
     private LocalDateTime refundDateTime;
 
-    private Ticket(int price, TicketType type, LocalDateTime releaseDateTime,
+    public static Ticket createTicket(TicketType ticketType, int price,
+        LocalDateTime releaseDateTime,
+        LocalDateTime deadLineDateTime) {
+        return new Ticket(ticketType, price, releaseDateTime, deadLineDateTime);
+    }
+
+    private Ticket(TicketType type, int price, LocalDateTime releaseDateTime,
         LocalDateTime deadLineDateTime) {
         this.price = price;
         this.type = type;
