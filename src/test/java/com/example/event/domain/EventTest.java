@@ -17,28 +17,6 @@ import static org.assertj.core.api.Assertions.*;
 
 class EventTest {
 
-    @Test
-    @DisplayName("판매 가능한 티켓 개수가 0장 이하인 경우 예외가 발생한다.")
-    void shouldThrowExceptionWhenTotalTicketNumberIsZeroOrNegative() {
-        //given
-        String eventName = EventTestFixtures.EVENT_NAME;
-        Venue eventVenue = EventTestFixtures.eventVenue;
-        Host host = EventTestFixtures.host;
-        Sponsor sponsor = EventTestFixtures.sponsor;
-        LocalDateTime eventStartDateTime = EventTestFixtures.startDateTime;
-        LocalDateTime eventEndDateTime = EventTestFixtures.endDateTime;
-        Announcement announcement = EventTestFixtures.announcement;
-        //when
-        int totalTicketNumber = 0;
-
-        //then
-        assertThatThrownBy(
-            () -> Event.createEvent(eventName, eventVenue, host, sponsor,
-                totalTicketNumber,
-                eventStartDateTime, eventEndDateTime, announcement))
-            .isInstanceOf(EventCreateTicketNegativeException.class)
-            .hasMessage(EventCreateTicketNegativeException.MESSAGE);
-    }
 
     @Test
     @DisplayName("이벤트는 종료 시간이 시작 시간보다 빠르면 예외가 발생한다.")
@@ -103,7 +81,7 @@ class EventTest {
         //when
         LocalDateTime eventStartDateTime = LocalDateTime.now().plusDays(4);
         LocalDateTime eventEndDateTime = eventStartDateTime.plusDays(1);
-        TicketInventory ticketInventory = new TicketInventory();
+        TicketInventory ticketInventory = EventTestFixtures.tickets;
         Event event = Event.createEvent(eventName, eventVenue, host, sponsor, ticketInventory,
             eventStartDateTime,
             eventEndDateTime,

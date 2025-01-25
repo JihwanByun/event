@@ -23,7 +23,7 @@ public class Ticket {
 
     private LocalDateTime refundDateTime;
 
-    public static Ticket createTicket(TicketType ticketType, int price,
+    public static Ticket createTicketNotReleased(TicketType ticketType, int price,
         LocalDateTime releaseDateTime,
         LocalDateTime deadLineDateTime) {
         return new Ticket(ticketType, price, releaseDateTime, deadLineDateTime);

@@ -8,9 +8,6 @@ import com.example.event.domain.value.Venue;
 import com.example.event.exception.event.EventCreateEndDateException;
 import com.example.event.exception.event.EventCreateStartDateException;
 import com.example.event.exception.event.EventCreateTicketNegativeException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -68,7 +65,7 @@ public final class Event {
     }
 
     public static void validateStartDateTime(LocalDateTime startDateTime) {
-        if (startDateTime.isAfter(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3))) {
+        if (!startDateTime.isAfter(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3))) {
             throw new EventCreateStartDateException();
         }
     }
@@ -80,11 +77,11 @@ public final class Event {
         }
     }
 
-    public void enrollTicketOfEvent(TicketType ticketType, int stock, int price,
+    public void enrollTicketTypeAndStockOfEvent(TicketType ticketType, int stock, int price,
         LocalDateTime releaseDateTime,
         LocalDateTime deadLineDateTime) {
 
-        ticketInventory.addTickets(ticketType, stock, price, releaseDateTime, deadLineDateTime);
+        this.ticketInventory.addTickets(ticketType, stock, price, releaseDateTime, deadLineDateTime);
 
     }
 
