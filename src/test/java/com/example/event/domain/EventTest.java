@@ -1,14 +1,11 @@
 package com.example.event.domain;
 
 import com.example.event.EventTestFixtures;
-import com.example.event.TicketTestFixtures;
 import com.example.event.domain.value.Host;
 import com.example.event.domain.value.Sponsor;
-import com.example.event.domain.value.TicketType;
 import com.example.event.domain.value.Venue;
 import com.example.event.exception.event.EventCreateEndDateException;
 import com.example.event.exception.event.EventCreateStartDateException;
-import com.example.event.exception.event.EventCreateTicketNegativeException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -98,33 +95,8 @@ class EventTest {
         assertThat(event.getEndDateTime()).isEqualTo(eventEndDateTime);
     }
 
-
     /*
     이벤트 티켓 생성하기
      */
 
-    /*
-    @Test
-    @DisplayName("이벤트에 판매할 모든 티켓의 초기 상태는 NotReleased 이다.")
-    void ticketInitStatusIsNotReleased() {
-        //given
-        int ticketPrice = TicketTestFixtures.price;
-        TicketType ticketType = TicketTestFixtures.typeVIP;
-        LocalDateTime ticketReleaseDateTime = TicketTestFixtures.releaseDateTime;
-        LocalDateTime ticketDeadLineDateTime = TicketTestFixtures.deadLineDateTime;
-
-        //when
-        Ticket ticket = Ticket.createTicketNotReleased(ticketPrice, ticketType,
-            ticketReleaseDateTime,
-            ticketDeadLineDateTime);
-
-        //then
-        assertThat(ticket.getStatus()).isEqualTo(TicketStatus.NOT_RELEASED);
-        assertThat(ticketPrice).isEqualTo(ticket.getPrice());
-        assertThat(ticketType).isEqualTo(ticket.getType());
-        assertThat(ticketReleaseDateTime).isEqualTo(ticket.getReleaseDateTime());
-        assertThat(ticketDeadLineDateTime).isEqualTo(ticket.getDeadLineDateTime());
-    }
-
-     */
 }

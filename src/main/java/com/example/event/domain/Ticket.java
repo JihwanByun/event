@@ -1,6 +1,7 @@
 package com.example.event.domain;
 
 import com.example.event.domain.value.TicketType;
+import com.example.event.exception.event.TicektStockNegativeException;
 import com.example.event.exception.ticket.TicketPriceNegativeException;
 import com.example.event.exception.ticket.TicketReleasedDateTimeException;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class Ticket {
     public static Ticket createTicketNotReleased(TicketType ticketType, int price,
         LocalDateTime releaseDateTime,
         LocalDateTime deadLineDateTime) {
+
         return new Ticket(ticketType, price, releaseDateTime, deadLineDateTime);
     }
 
@@ -37,7 +39,7 @@ public class Ticket {
         this.releaseDateTime = releaseDateTime;
         this.deadLineDateTime = deadLineDateTime;
     }
-
+    
     public void setTicketStatusForSale() {
         this.status = TicketStatus.FOR_SALE;
     }

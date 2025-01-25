@@ -5,11 +5,11 @@ import lombok.Getter;
 public enum ErrorCode {
 
     //Event
-    EVENT_TICKET_CREATE_ERROR(400, "Number of Ticket can't zero or negative"),
     EVENT_STARTDATE_CREATE_ERROR(400, "Event can be hold more in 3 Days"),
     EVENT_ENDDATE_CREATE_ERROR(400, "Event can be hold after open time"),
 
     //Ticket
+    TICKET_STOCK_ERROR(400, "Number of Ticket can't zero or negative"),
     TICKET_PRICE_ERROR(400, "Ticket Price can't be negative"),
     TICKET_RELEASED_DATETIME_ERROR(400, "티켓 발매 시각은 이벤트 시작일 이전 30일 부터 1일전까지만 가능합니다."),
     //Email

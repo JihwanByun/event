@@ -7,7 +7,7 @@ import com.example.event.domain.value.TicketType;
 import com.example.event.domain.value.Venue;
 import com.example.event.exception.event.EventCreateEndDateException;
 import com.example.event.exception.event.EventCreateStartDateException;
-import com.example.event.exception.event.EventCreateTicketNegativeException;
+import com.example.event.exception.event.TicektStockNegativeException;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -50,19 +50,12 @@ public final class Event {
         , LocalDateTime startDateTime, LocalDateTime endDateTime,
         Announcement announcement) {
 
-        int totalTicketQuantity = ticketInventory.getTotalTicketQuantity();
-        validateTotalTicketNumber(totalTicketQuantity);
         validateStartDateTime(startDateTime);
         validateEventDuration(startDateTime, endDateTime);
         return new Event(eventName, venue, host, sponsor, ticketInventory, startDateTime,
             endDateTime, announcement);
     }
 
-    public static void validateTotalTicketNumber(int totalTicketCnt) {
-        if (totalTicketCnt <= 0) {
-            throw new EventCreateTicketNegativeException();
-        }
-    }
 
     public static void validateStartDateTime(LocalDateTime startDateTime) {
         if (!startDateTime.isAfter(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3))) {
@@ -81,7 +74,8 @@ public final class Event {
         LocalDateTime releaseDateTime,
         LocalDateTime deadLineDateTime) {
 
-        this.ticketInventory.addTickets(ticketType, stock, price, releaseDateTime, deadLineDateTime);
+        this.ticketInventory.addTickets(ticketType, stock, price, releaseDateTime,
+            deadLineDateTime);
 
     }
 
