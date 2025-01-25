@@ -1,6 +1,9 @@
 package com.example.event.domain;
 
 import com.example.event.domain.value.TicketType;
+import com.example.event.exception.event.TicektStockNegativeException;
+import com.example.event.exception.ticket.TicketPriceNegativeException;
+import com.example.event.exception.ticket.TicketReleasedDateTimeException;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
