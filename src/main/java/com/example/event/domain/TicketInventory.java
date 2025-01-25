@@ -1,6 +1,7 @@
 package com.example.event.domain;
 
 import com.example.event.domain.value.TicketType;
+import com.example.event.exception.event.TicektStockNegativeException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,9 @@ public class TicketInventory {
 
     public void addTickets(TicketType ticketType, int stock, int price,
         LocalDateTime releaseDateTime, LocalDateTime deadLineDateTime) {
+
+        validateTotalTicketNumber(stock);
+
         this.tickets.putIfAbsent(ticketType, new ArrayList<>());
         List<Ticket> newTickets = IntStream.range(0, stock)
             .mapToObj(
@@ -34,5 +38,11 @@ public class TicketInventory {
 
     public static TicketInventory createTicketInventory() {
         return new TicketInventory();
+    }
+
+    public static void validateTotalTicketNumber(int ticketStock) {
+        if (ticketStock <= 0) {
+            throw new TicektStockNegativeException();
+        }
     }
 }

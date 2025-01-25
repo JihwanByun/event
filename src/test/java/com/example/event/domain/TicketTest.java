@@ -2,11 +2,8 @@ package com.example.event.domain;
 
 import com.example.event.EventTestFixtures;
 import com.example.event.TicketTestFixtures;
-import com.example.event.domain.value.Host;
-import com.example.event.domain.value.Sponsor;
 import com.example.event.domain.value.TicketType;
-import com.example.event.domain.value.Venue;
-import com.example.event.exception.event.EventCreateTicketNegativeException;
+import com.example.event.exception.event.TicektStockNegativeException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,17 +13,11 @@ import static org.assertj.core.api.Assertions.*;
 public class TicketTest {
 
     @Test
-    @DisplayName("판매 가능한 티켓 개수가 0장 이하인 경우 예외가 발생한다.")
+    @DisplayName("판매할 티켓 수가 0장 이하인 경우 예외가 발생한다.")
     void shouldThrowExceptionWhenTotalTicketNumberIsZeroOrNegative() {
+
         //given
-        String eventName = EventTestFixtures.EVENT_NAME;
-        Venue eventVenue = EventTestFixtures.eventVenue;
-        Host host = EventTestFixtures.host;
-        Sponsor sponsor = EventTestFixtures.sponsor;
-        LocalDateTime eventStartDateTime = EventTestFixtures.startDateTime;
-        LocalDateTime eventEndDateTime = EventTestFixtures.endDateTime;
-        Announcement announcement = EventTestFixtures.announcement;
-        TicketInventory ticketInventory = TicketInventory.createTicketInventory();
+        TicketInventory ticketInventory = EventTestFixtures.tickets;
         int ticketPrice = TicketTestFixtures.price;
         LocalDateTime releasedDateTime = TicketTestFixtures.releaseDateTime;
         LocalDateTime deadLineDateTime = TicketTestFixtures.deadLineDateTime;
@@ -34,16 +25,13 @@ public class TicketTest {
 
         //when
         int ticketStock = 0;
-        ticketInventory.addTickets(ticketType, ticketStock, ticketPrice, releasedDateTime,
-            deadLineDateTime);
 
         //then
         assertThatThrownBy(
-            () -> Event.createEvent(eventName, eventVenue, host, sponsor,
-                ticketInventory,
-                eventStartDateTime, eventEndDateTime, announcement))
-            .isInstanceOf(EventCreateTicketNegativeException.class)
-            .hasMessage(EventCreateTicketNegativeException.MESSAGE);
+            () -> ticketInventory.addTickets(ticketType, ticketStock, ticketPrice, releasedDateTime,
+                deadLineDateTime))
+            .isInstanceOf(TicektStockNegativeException.class)
+            .hasMessage(TicektStockNegativeException.MESSAGE);
     }
 
 
@@ -81,4 +69,28 @@ public class TicketTest {
 
     }
 
+    /*
+    @Test
+    @DisplayName("이벤트에 판매할 모든 티켓의 초기 상태는 NotReleased 이다.")
+    void ticketInitStatusIsNotReleased() {
+        //given
+        int ticketPrice = TicketTestFixtures.price;
+        TicketType ticketType = TicketTestFixtures.typeVIP;
+        LocalDateTime ticketReleaseDateTime = TicketTestFixtures.releaseDateTime;
+        LocalDateTime ticketDeadLineDateTime = TicketTestFixtures.deadLineDateTime;
+
+        //when
+        Ticket ticket = Ticket.createTicketNotReleased(ticketPrice, ticketType,
+            ticketReleaseDateTime,
+            ticketDeadLineDateTime);
+
+        //then
+        assertThat(ticket.getStatus()).isEqualTo(TicketStatus.NOT_RELEASED);
+        assertThat(ticketPrice).isEqualTo(ticket.getPrice());
+        assertThat(ticketType).isEqualTo(ticket.getType());
+        assertThat(ticketReleaseDateTime).isEqualTo(ticket.getReleaseDateTime());
+        assertThat(ticketDeadLineDateTime).isEqualTo(ticket.getDeadLineDateTime());
+    }
+
+     */
 }
