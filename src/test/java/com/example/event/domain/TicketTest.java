@@ -44,9 +44,9 @@ public class TicketTest {
         TicketType ticketType = TicketTestFixtures.typeVIP;
         int stock = TicketTestFixtures.stock;
         int price = TicketTestFixtures.price;
+        TicketInventory ticketInventory = TicketInventory.createTicketInventoryOfEvent(event);
 
         //when
-        TicketInventory ticketInventory = TicketInventory.createTicketInventoryOfEvent(event);
         LocalDateTime eventStartDateTime = event.getStartDateTime();
         LocalDateTime ticketReleaseDateTime = event.getStartDateTime().minusDays(30);
         LocalDateTime ticketDeadLineDateTime = event.getStartDateTime().minusDays(10);
@@ -55,10 +55,10 @@ public class TicketTest {
 
         //then
         assertThat(
-            ticketInventory.getTickets().get(ticketType).get(0).getReleaseDateTime()).isEqualTo(
+            ticketInventory.getAvailableTickets().get(ticketType).get(0).getReleaseDateTime()).isEqualTo(
             ticketReleaseDateTime);
         assertThat(
-            ticketInventory.getTickets().get(ticketType).get(0).getDeadLineDateTime()).isEqualTo(
+            ticketInventory.getAvailableTickets().get(ticketType).get(0).getDeadLineDateTime()).isEqualTo(
             ticketDeadLineDateTime);
     }
 
@@ -70,6 +70,12 @@ public class TicketTest {
     @Test
     @DisplayName("티켓의 상태가 판매 중일 때만 티켓을 구매할 수 있다.")
     void canBuyTicketWhenTicketStatusForSale() {
+
+    }
+
+    @Test
+    @DisplayName("티켓의 재고가 구매할 티켓 수보다 크거나 같을 때만 구매할 수 있다.")
+    void canBuyTicketWhenTicketInStock() {
     }
 
 
@@ -88,28 +94,4 @@ public class TicketTest {
     void failToBuyTicketStatusIsNotReleased() {
     }
 
-    /*
-    @Test
-    @DisplayName("이벤트에 판매할 모든 티켓의 초기 상태는 NotReleased 이다.")
-    void ticketInitStatusIsNotReleased() {
-        //given
-        int ticketPrice = TicketTestFixtures.price;
-        TicketType ticketType = TicketTestFixtures.typeVIP;
-        LocalDateTime ticketReleaseDateTime = TicketTestFixtures.releaseDateTime;
-        LocalDateTime ticketDeadLineDateTime = TicketTestFixtures.deadLineDateTime;
-
-        //when
-        Ticket ticket = Ticket.createTicketNotReleased(ticketPrice, ticketType,
-            ticketReleaseDateTime,
-            ticketDeadLineDateTime);
-
-        //then
-        assertThat(ticket.getStatus()).isEqualTo(TicketStatus.NOT_RELEASED);
-        assertThat(ticketPrice).isEqualTo(ticket.getPrice());
-        assertThat(ticketType).isEqualTo(ticket.getType());
-        assertThat(ticketReleaseDateTime).isEqualTo(ticket.getReleaseDateTime());
-        assertThat(ticketDeadLineDateTime).isEqualTo(ticket.getDeadLineDateTime());
-    }
-
-     */
 }

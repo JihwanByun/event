@@ -16,9 +16,7 @@ public class Ticket {
     private final LocalDateTime releaseDateTime;
     @Getter
     private final LocalDateTime deadLineDateTime;
-
     private LocalDateTime paymentDateTime;
-
     private LocalDateTime refundDateTime;
 
     public static Ticket createTicketNotReleased(TicketType ticketType, int price,
@@ -36,7 +34,7 @@ public class Ticket {
         this.releaseDateTime = releaseDateTime;
         this.deadLineDateTime = deadLineDateTime;
     }
-    
+
     public void setTicketStatusForSale() {
         this.status = TicketStatus.FOR_SALE;
     }
