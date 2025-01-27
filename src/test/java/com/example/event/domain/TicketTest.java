@@ -4,7 +4,6 @@ import com.example.event.EventTestFixtures;
 import com.example.event.TicketTestFixtures;
 import com.example.event.domain.value.TicketType;
 import com.example.event.exception.event.TicketStockNegativeException;
-import com.example.event.exception.ticket.TicketReleasedDateTimeException;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,8 @@ public class TicketTest {
     void shouldThrowExceptionWhenTotalTicketNumberIsZeroOrNegative() {
 
         //given
-        TicketInventory ticketInventory = EventTestFixtures.tickets;
+        Event event = EventTestFixtures.createEvent();
+        TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(event);
         int ticketPrice = TicketTestFixtures.price;
         LocalDateTime releasedDateTime = TicketTestFixtures.releaseDateTime;
         LocalDateTime deadLineDateTime = TicketTestFixtures.deadLineDateTime;
@@ -55,10 +55,12 @@ public class TicketTest {
 
         //then
         assertThat(
-            ticketInventory.getAvailableTickets().get(ticketType).get(0).getReleaseDateTime()).isEqualTo(
+            ticketInventory.getAvailableTickets().get(ticketType).get(0)
+                .getReleaseDateTime()).isEqualTo(
             ticketReleaseDateTime);
         assertThat(
-            ticketInventory.getAvailableTickets().get(ticketType).get(0).getDeadLineDateTime()).isEqualTo(
+            ticketInventory.getAvailableTickets().get(ticketType).get(0)
+                .getDeadLineDateTime()).isEqualTo(
             ticketDeadLineDateTime);
     }
 
@@ -66,6 +68,31 @@ public class TicketTest {
     /*
     티켓 구매 관련 테스트
      */
+
+    @Test
+    @DisplayName("티켓의 재고가 구매 수량보다 많고, 존재하는 티켓 Type에 대해서만 구매할 수 있다.")
+    void buyTicketWithStatusAndStockSuccessfully() {
+
+        //given
+        Event event = EventTestFixtures.createEvent();
+        TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(event);
+        int stock = TicketTestFixtures.stock; //100개
+        TicketType ticketType = TicketTestFixtures.typeVIP;
+
+        //when
+        int numberOfBuyingTicket = 2;
+        ticketInventory.buyTicketWithType(numberOfBuyingTicket, ticketType);
+
+        //then
+        assertThat(ticketInventory.getAvailableTickets().get(ticketType).size()).isEqualTo(
+            stock - 2);
+        assertThat(ticketInventory.getSoldTickets().get(ticketType).size()).isEqualTo(
+            numberOfBuyingTicket);
+        assertThat(ticketInventory.getSoldTickets().get(ticketType).stream()
+            .allMatch(ticket -> ticket.getStatus() == TicketStatus.SOLD)).isTrue();
+
+    }
+
 
     @Test
     @DisplayName("티켓의 상태가 판매 중일 때만 티켓을 구매할 수 있다.")
@@ -80,7 +107,7 @@ public class TicketTest {
 
 
     @Test
-    @DisplayName("티켓은 하나의 이벤트에 대해 사용자당 최대 2매를 초과할 수 없다.")
+    @DisplayName("티켓은 하나의 이벤트에 대해 사용자당 최대 5매를 초과할 수 없다.")
     void failToBuyTicketMoreThan2PerEvent() throws Exception {
     }
 

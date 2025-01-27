@@ -23,8 +23,6 @@ public final class Event {
     @Getter
     private final Sponsor sponsor;
     @Getter
-    private final TicketInventory ticketInventory;
-    @Getter
     private final LocalDateTime startDateTime;
     @Getter
     private final LocalDateTime endDateTime;
@@ -32,26 +30,23 @@ public final class Event {
     private final Announcement announcement; //선택 필드
 
     private Event(String eventName, Venue venue, Host host, Sponsor sponsor,
-        TicketInventory tickets,
         LocalDateTime startDateTime, LocalDateTime endDateTime, Announcement announcement) {
         this.eventName = eventName;
         this.venue = venue;
         this.host = host;
         this.sponsor = sponsor;
-        this.ticketInventory = tickets;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.announcement = announcement;
     }
 
-    public static Event createEvent(String eventName, Venue venue, Host host, Sponsor sponsor,
-        TicketInventory ticketInventory
+    public static Event createEvent(String eventName, Venue venue, Host host, Sponsor sponsor
         , LocalDateTime startDateTime, LocalDateTime endDateTime,
         Announcement announcement) {
 
         validateStartDateTime(startDateTime);
         validateEventDuration(startDateTime, endDateTime);
-        return new Event(eventName, venue, host, sponsor, ticketInventory, startDateTime,
+        return new Event(eventName, venue, host, sponsor, startDateTime,
             endDateTime, announcement);
     }
 

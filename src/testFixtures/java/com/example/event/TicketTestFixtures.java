@@ -14,7 +14,9 @@ public class TicketTestFixtures {
     public static final LocalDateTime releaseDateTime = event.getStartDateTime().minusDays(13);
     public static final LocalDateTime deadLineDateTime = releaseDateTime.plusDays(3);
 
-    public static TicketInventory createTicketInventoryOfEvent() {
+    public static TicketInventory createTicketInventoryOfEvent(
+        Event event
+    ) {
         TicketInventory ticketInventory = TicketInventory.createTicketInventoryOfEvent(event);
         ticketInventory.addTickets(typeVIP, stock, price, releaseDateTime, deadLineDateTime);
 

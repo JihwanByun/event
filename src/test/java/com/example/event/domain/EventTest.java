@@ -25,7 +25,6 @@ class EventTest {
         Host host = EventTestFixtures.host;
         Sponsor sponsor = EventTestFixtures.sponsor;
         LocalDateTime eventStartDateTime = EventTestFixtures.startDateTime;
-        TicketInventory ticketInventory = EventTestFixtures.tickets;
         Announcement announcement = EventTestFixtures.announcement;
 
         //when
@@ -33,7 +32,7 @@ class EventTest {
 
         //when & then
         assertThatThrownBy(
-            () -> Event.createEvent(eventName, eventVenue, host, sponsor, ticketInventory,
+            () -> Event.createEvent(eventName, eventVenue, host, sponsor,
                 eventStartDateTime,
                 eventEndDateTime, announcement))
             .isInstanceOf(EventCreateEndDateException.class)
@@ -48,7 +47,6 @@ class EventTest {
         Venue eventVenue = EventTestFixtures.eventVenue;
         Host host = EventTestFixtures.host;
         Sponsor sponsor = EventTestFixtures.sponsor;
-        TicketInventory tickets = EventTestFixtures.tickets;
         Announcement announcement = EventTestFixtures.announcement;
 
         //when
@@ -57,7 +55,7 @@ class EventTest {
 
         //then
         assertThatThrownBy(
-            () -> Event.createEvent(eventName, eventVenue, host, sponsor, tickets,
+            () -> Event.createEvent(eventName, eventVenue, host, sponsor,
                 eventStartDateTime, eventEndDateTime, announcement))
             .isInstanceOf(EventCreateStartDateException.class)
             .hasMessage(EventCreateStartDateException.MESSAGE);
@@ -78,8 +76,7 @@ class EventTest {
         //when
         LocalDateTime eventStartDateTime = LocalDateTime.now().plusDays(4);
         LocalDateTime eventEndDateTime = eventStartDateTime.plusDays(1);
-        TicketInventory ticketInventory = EventTestFixtures.tickets;
-        Event event = Event.createEvent(eventName, eventVenue, host, sponsor, ticketInventory,
+        Event event = Event.createEvent(eventName, eventVenue, host, sponsor,
             eventStartDateTime,
             eventEndDateTime,
             announcement);
@@ -90,7 +87,6 @@ class EventTest {
         assertThat(event.getVenue()).isEqualTo(eventVenue);
         assertThat(event.getHost()).isEqualTo(host);
         assertThat(event.getSponsor()).isEqualTo(sponsor);
-        assertThat(event.getTicketInventory()).isEqualTo(ticketInventory);
         assertThat(event.getStartDateTime()).isEqualTo(eventStartDateTime);
         assertThat(event.getEndDateTime()).isEqualTo(eventEndDateTime);
     }
