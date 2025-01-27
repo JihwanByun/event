@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Getter;
 
@@ -21,6 +22,7 @@ public class TicketInventory {
     private final Event event;
     @Getter
     private final Map<TicketType, List<Ticket>> availableTickets;
+    @Getter
     private final Map<TicketType, List<Ticket>> soldTickets;
 
 
@@ -46,20 +48,32 @@ public class TicketInventory {
             .mapToObj(
                 value -> Ticket.createTicketNotReleased(ticketType, price, releaseDateTime,
                     deadLineDateTime))
-            .toList();
+            .collect(Collectors.toCollection(ArrayList::new));
 
         this.availableTickets.put(ticketType, newTickets);
     }
 
     public void buyTicketWithType(int quantity, TicketType ticketType) {
 
-        if(!this.availableTickets.containsKey(ticketType)){
+        if (!this.availableTickets.containsKey(ticketType)) {
             throw new TicketTypeNotFoundException();
         }
-        if(this.availableTickets.get(ticketType).size() < quantity){
+        if (this.availableTickets.get(ticketType).size() < quantity) {
             throw new TicketOutOfStockException();
         }
-        
+
+        List<Ticket> purchasedTickets = availableTickets.get(ticketType)
+            .stream()
+            .limit(quantity)
+            .peek(Ticket::setTicketStatusSold)
+            .toList();
+
+        this.soldTickets.computeIfAbsent(ticketType, k -> new ArrayList<>())
+            .addAll(purchasedTickets);
+
+        purchasedTickets.forEach(
+            purchaserdTicket -> this.availableTickets.get(ticketType)
+                .removeIf(availableTicket -> availableTicket == purchaserdTicket));
     }
 
     public static TicketInventory createTicketInventoryOfEvent(Event event) {

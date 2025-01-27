@@ -15,14 +15,14 @@ public class EventTestFixtures {
     public static final Host host = HostTestFixtures.createHost();
     public static final LocalDateTime startDateTime = LocalDateTime.now().plusDays(5);
     public static final LocalDateTime endDateTime = LocalDateTime.of(2050, 12, 12, 12, 12);
-    public static final TicketInventory tickets = TicketTestFixtures.createTicketInventoryOfEvent();
     public static final Sponsor sponsor = new Sponsor("미래재단");
     public static final Announcement announcement = AnnouncementTestFixtures.createAnnouncement();
 
     public static Event createEvent() {
         return Event.createEvent(EVENT_NAME, eventVenue, HostTestFixtures.createHost(),
-            SponsorTestFixtures.createSponsor(), tickets, startDateTime, endDateTime,
+            SponsorTestFixtures.createSponsor(), startDateTime, endDateTime,
             announcement);
     }
+
 }
 
