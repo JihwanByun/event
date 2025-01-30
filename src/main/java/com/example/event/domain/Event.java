@@ -13,9 +13,8 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import org.springframework.lang.Nullable;
 
-public final class Event {
+public class Event {
 
     @Getter
     private final String eventName;
