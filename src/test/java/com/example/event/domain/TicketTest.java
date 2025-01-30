@@ -85,7 +85,7 @@ public class TicketTest {
 
         //then
         assertThat(ticketInventory.getAvailableTickets().get(ticketType).size()).isEqualTo(
-            stock - 2);
+            stock - numberOfBuyingTicket);
         assertThat(ticketInventory.getSoldTickets().get(ticketType).size()).isEqualTo(
             numberOfBuyingTicket);
         assertThat(ticketInventory.getSoldTickets().get(ticketType).stream()
