@@ -34,7 +34,7 @@ public class Ticket {
         this.releaseDateTime = releaseDateTime;
         this.deadLineDateTime = deadLineDateTime;
     }
-
+    
     public void setTicketStatusForSale() {
         this.status = TicketStatus.FOR_SALE;
     }
