@@ -4,6 +4,7 @@ import com.example.event.EventTestFixtures;
 import com.example.event.domain.value.Host;
 import com.example.event.domain.value.Sponsor;
 import com.example.event.domain.value.Venue;
+import com.example.event.exception.ErrorCode;
 import com.example.event.exception.event.EventCreateEndDateException;
 import com.example.event.exception.event.EventCreateStartDateException;
 import com.example.event.exception.event.EventCreateTicketNegativeException;
@@ -35,7 +36,7 @@ class EventTest {
                 totalTicketNumber,
                 eventStartDateTime, eventEndDateTime, announcement))
             .isInstanceOf(EventCreateTicketNegativeException.class)
-            .hasMessage(EventCreateTicketNegativeException.MESSAGE);
+            .hasMessage(ErrorCode.EVENT_TICKET_CREATE_ERROR.getMessage());
     }
 
     @Test
@@ -60,7 +61,7 @@ class EventTest {
                 eventStartDateTime,
                 eventEndDateTime, announcement))
             .isInstanceOf(EventCreateEndDateException.class)
-            .hasMessage(EventCreateEndDateException.MESSAGE);
+            .hasMessage(ErrorCode.EVENT_ENDDATE_CREATE_ERROR.getMessage());
     }
 
     @Test
@@ -83,7 +84,7 @@ class EventTest {
             () -> Event.createEvent(eventName, eventVenue, host, sponsor, totalTicketNumber,
                 eventStartDateTime, eventEndDateTime, announcement))
             .isInstanceOf(EventCreateStartDateException.class)
-            .hasMessage(EventCreateStartDateException.MESSAGE);
+            .hasMessage(ErrorCode.EVENT_STARTDATE_CREATE_ERROR.getMessage());
     }
 
     @Test
