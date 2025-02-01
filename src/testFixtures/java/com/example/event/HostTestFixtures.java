@@ -12,7 +12,7 @@ public class HostTestFixtures {
     public static Host createHost() {
 
         Email email = new Email("host@mail.com");
-        PhoneNumber phoneNumber = new PhoneNumber("010-0000-0000");
+        PhoneNumber phoneNumber = new PhoneNumber("01000000000");
 
         HostManager hostManager = new HostManager(new ManagerName("김담당자"), email, phoneNumber);
         return new Host(new HostName("문화체육관광부"), hostManager);
