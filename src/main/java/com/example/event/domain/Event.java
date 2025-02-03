@@ -38,7 +38,7 @@ public class Event {
 
     private final Announcement announcement; //선택 필드
 
-    public Optional<Announcement> getAnnouncementOfEvent(){
+    public Optional<Announcement> getAnnouncementOfEvent() {
         return Optional.ofNullable(announcement);
     }
 
@@ -67,12 +67,14 @@ public class Event {
 
     public static void validateTotalTicketNumber(int totalTicketCnt) {
         if (totalTicketCnt <= 0) {
+            EventCreateTicketNegativeException.invalidTicketStock(totalTicketCnt);
             throw new EventCreateTicketNegativeException();
         }
     }
 
     public static void validateStartDateTime(LocalDateTime startDateTime) {
         if (startDateTime.isBefore(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3))) {
+            EventCreateStartDateException.logInvalidStartDate(startDateTime);
             throw new EventCreateStartDateException();
         }
     }
@@ -80,6 +82,7 @@ public class Event {
     public static void validateEventDurationTime(LocalDateTime startDateTime,
         LocalDateTime endDateTime) {
         if (endDateTime.isBefore(startDateTime)) {
+            EventCreateEndDateException.logInvalidEndDate(endDateTime, startDateTime);
             throw new EventCreateEndDateException();
         }
     }
