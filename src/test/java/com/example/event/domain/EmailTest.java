@@ -16,7 +16,7 @@ public class EmailTest {
         String Email = "abc@abc.com";
 
         //when
-        com.example.event.domain.value.Email email1 = new Email(Email);
+        Email email1 = new Email(Email);
         Email email2 = new Email(Email);
 
         //then

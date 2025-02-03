@@ -11,6 +11,7 @@ public class PhoneNumberTest {
     @Test
     @DisplayName("핸드폰 번호가 같으면 같은 객체로 판단한다.")
     void phoneNumberValidateSuccessfully() {
+
         //given
         String phoneNumber = "01012345678";
 

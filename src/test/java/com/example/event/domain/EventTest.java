@@ -25,6 +25,7 @@ class EventTest {
         @Test
         @DisplayName("판매 가능한 티켓 개수가 0장 이하인 경우 예외가 발생한다.")
         void shouldThrowExceptionWhenTotalTicketNumberIsZeroOrNegative() {
+
             //given
             String eventName = EventTestFixtures.EVENT_NAME;
             Venue eventVenue = EventTestFixtures.eventVenue;
@@ -33,6 +34,7 @@ class EventTest {
             LocalDateTime eventStartDateTime = EventTestFixtures.startDateTime;
             LocalDateTime eventEndDateTime = EventTestFixtures.endDateTime;
             Announcement announcement = EventTestFixtures.announcement;
+
             //when
             int totalTicketNumber = 0;
 
@@ -61,7 +63,7 @@ class EventTest {
             //when
             LocalDateTime eventEndDateTime = eventStartDateTime.minusDays(1);
 
-            //when & then
+            //then
             assertThatThrownBy(
                 () -> Event.createEvent(eventName, eventVenue, host, sponsor, totalTicketNumber,
                     eventStartDateTime,
@@ -73,6 +75,7 @@ class EventTest {
         @Test
         @DisplayName("이벤트 시작 시간이 현재 시간 기준 3일 미만일 경우 예외가 발생한다.")
         public void addEventStartDateTime() {
+
             //given
             String eventName = EventTestFixtures.EVENT_NAME;
             Venue eventVenue = EventTestFixtures.eventVenue;
@@ -131,6 +134,4 @@ class EventTest {
             assertThat(event.getEndDateTime()).isEqualTo(eventEndDateTime);
         }
     }
-
-
 }
