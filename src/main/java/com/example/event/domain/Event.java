@@ -9,6 +9,7 @@ import com.example.event.exception.event.EventCreateStartDateException;
 import com.example.event.exception.event.EventCreateTicketNegativeException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -35,8 +36,11 @@ public class Event {
     @Getter
     private final LocalDateTime endDateTime;
 
-    @Getter
     private final Announcement announcement; //선택 필드
+
+    public Optional<Announcement> getAnnouncementOfEvent() {
+        return Optional.ofNullable(announcement);
+    }
 
     private Event(String eventName, Venue venue, Host host, Sponsor sponsor, int totalTicketNumber,
         LocalDateTime startDateTime, LocalDateTime endDateTime, Announcement announcement) {
@@ -63,20 +67,20 @@ public class Event {
 
     public static void validateTotalTicketNumber(int totalTicketCnt) {
         if (totalTicketCnt <= 0) {
-            throw new EventCreateTicketNegativeException();
+            throw new EventCreateTicketNegativeException(totalTicketCnt);
         }
     }
 
     public static void validateStartDateTime(LocalDateTime startDateTime) {
         if (startDateTime.isBefore(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3))) {
-            throw new EventCreateStartDateException();
+            throw new EventCreateStartDateException(startDateTime);
         }
     }
 
     public static void validateEventDurationTime(LocalDateTime startDateTime,
         LocalDateTime endDateTime) {
         if (endDateTime.isBefore(startDateTime)) {
-            throw new EventCreateEndDateException();
+            throw new EventCreateEndDateException(endDateTime, startDateTime);
         }
     }
 }
