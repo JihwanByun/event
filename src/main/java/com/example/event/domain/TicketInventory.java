@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Getter;
@@ -46,7 +44,7 @@ public class TicketInventory {
         this.availableTickets.putIfAbsent(ticketType, new LinkedList<>());
         List<Ticket> newTickets = IntStream.range(0, stock)
             .mapToObj(
-                value -> Ticket.createTicketNotReleased(ticketType, price, releaseDateTime,
+                value -> Ticket.createTicket(price, ticketType, releaseDateTime,
                     deadLineDateTime))
             .collect(Collectors.toCollection(ArrayList::new));
 
@@ -80,9 +78,9 @@ public class TicketInventory {
         return new TicketInventory(event);
     }
 
-    private static void validateTotalTicketNumber(int ticketStock) {
-        if (ticketStock <= 0) {
-            throw new TicketStockNegativeException();
+    public static void validateTotalTicketNumber(int totalTicketCnt) {
+        if (totalTicketCnt <= 0) {
+            throw new TicketStockNegativeException(totalTicketCnt);
         }
     }
 

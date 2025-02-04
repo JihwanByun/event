@@ -3,16 +3,16 @@ package com.example.event.domain;
 
 import com.example.event.domain.value.Host;
 import com.example.event.domain.value.Sponsor;
-import com.example.event.domain.value.TicketType;
 import com.example.event.domain.value.Venue;
 import com.example.event.exception.event.EventCreateEndDateException;
 import com.example.event.exception.event.EventCreateStartDateException;
+import java.util.Optional;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-public final class Event {
+public class Event {
 
     @Getter
     private final String eventName;
@@ -26,8 +26,12 @@ public final class Event {
     private final LocalDateTime startDateTime;
     @Getter
     private final LocalDateTime endDateTime;
-    @Getter
+
     private final Announcement announcement; //선택 필드
+
+    public Optional<Announcement> getAnnouncementOfEvent() {
+        return Optional.ofNullable(announcement);
+    }
 
     private Event(String eventName, Venue venue, Host host, Sponsor sponsor,
         LocalDateTime startDateTime, LocalDateTime endDateTime, Announcement announcement) {
@@ -40,26 +44,27 @@ public final class Event {
         this.announcement = announcement;
     }
 
-    public static Event createEvent(String eventName, Venue venue, Host host, Sponsor sponsor
-        , LocalDateTime startDateTime, LocalDateTime endDateTime,
+    public static Event createEvent(String eventName, Venue venue, Host host, Sponsor sponsor,
+         LocalDateTime startDateTime, LocalDateTime endDateTime,
         Announcement announcement) {
 
         validateStartDateTime(startDateTime);
-        validateEventDuration(startDateTime, endDateTime);
+        validateEventDurationTime(startDateTime, endDateTime);
+
         return new Event(eventName, venue, host, sponsor, startDateTime,
             endDateTime, announcement);
     }
 
     public static void validateStartDateTime(LocalDateTime startDateTime) {
-        if (!startDateTime.isAfter(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3))) {
-            throw new EventCreateStartDateException();
+        if (startDateTime.isBefore(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3))) {
+            throw new EventCreateStartDateException(startDateTime);
         }
     }
 
-    public static void validateEventDuration(LocalDateTime startDateTime,
+    public static void validateEventDurationTime(LocalDateTime startDateTime,
         LocalDateTime endDateTime) {
         if (endDateTime.isBefore(startDateTime) || endDateTime.equals(startDateTime)) {
-            throw new EventCreateEndDateException();
+            throw new EventCreateEndDateException(endDateTime, startDateTime);
         }
     }
 }

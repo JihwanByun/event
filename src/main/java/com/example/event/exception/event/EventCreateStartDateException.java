@@ -1,13 +1,17 @@
 package com.example.event.exception.event;
 
 import com.example.event.exception.BusinessException;
-import com.example.event.exception.ErrorCode;
+import java.time.LocalDateTime;
 
 public class EventCreateStartDateException extends BusinessException {
 
-    public static final String MESSAGE = ErrorCode.EVENT_STARTDATE_CREATE_ERROR.getMessage();
+    private static final String MESSAGE_FORMAT = "이벤트 시작일 생성 오류 발생: 입력값 %s, 임계값 %s";
 
-    public EventCreateStartDateException() {
-        super(ErrorCode.EVENT_STARTDATE_CREATE_ERROR);
+    public EventCreateStartDateException(LocalDateTime startDate) {
+        super(String.format(MESSAGE_FORMAT, startDate, startDate.plusDays(3)));
+    }
+
+    public static String createMessage(LocalDateTime startDate) {
+        return String.format(MESSAGE_FORMAT, startDate, startDate.plusDays(3));
     }
 }
