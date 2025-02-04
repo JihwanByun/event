@@ -67,23 +67,20 @@ public class Event {
 
     public static void validateTotalTicketNumber(int totalTicketCnt) {
         if (totalTicketCnt <= 0) {
-            EventCreateTicketNegativeException.invalidTicketStock(totalTicketCnt);
-            throw new EventCreateTicketNegativeException();
+            throw new EventCreateTicketNegativeException(totalTicketCnt);
         }
     }
 
     public static void validateStartDateTime(LocalDateTime startDateTime) {
         if (startDateTime.isBefore(LocalDateTime.now(ZoneId.of("Asia/Seoul")).plusDays(3))) {
-            EventCreateStartDateException.logInvalidStartDate(startDateTime);
-            throw new EventCreateStartDateException();
+            throw new EventCreateStartDateException(startDateTime);
         }
     }
 
     public static void validateEventDurationTime(LocalDateTime startDateTime,
         LocalDateTime endDateTime) {
         if (endDateTime.isBefore(startDateTime)) {
-            EventCreateEndDateException.logInvalidEndDate(endDateTime, startDateTime);
-            throw new EventCreateEndDateException();
+            throw new EventCreateEndDateException(endDateTime, startDateTime);
         }
     }
 }
