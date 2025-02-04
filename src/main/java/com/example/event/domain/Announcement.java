@@ -1,11 +1,21 @@
 package com.example.event.domain;
 
+import com.example.event.domain.value.EventPhoto;
+import java.util.List;
+import org.springframework.lang.Nullable;
+
 public class Announcement {
 
-    private String caution;
+    private final String cautionMessage;
 
-    private String eventPhoto;
+    private final List<EventPhoto> eventPhotos;
 
-    private String directionsPhoto;
+    private final EventPhoto directionsPhoto;
 
+    public Announcement(String cautionMessage, List<EventPhoto> eventPhotos,
+        EventPhoto directionsPhoto) {
+        this.cautionMessage = cautionMessage;
+        this.eventPhotos = eventPhotos;
+        this.directionsPhoto = directionsPhoto;
+    }
 }

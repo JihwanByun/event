@@ -1,4 +1,5 @@
 package com.example.event.domain;
+
 public enum TicketStatus {
-    Sold, Paying, forSale, notReleased
+    SOLD, FOR_SALE, NOT_RELEASED
 }
