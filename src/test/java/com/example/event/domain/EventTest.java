@@ -1,6 +1,9 @@
 package com.example.event.domain;
 
+import com.example.event.AnnouncementTestFixtures;
 import com.example.event.EventTestFixtures;
+import com.example.event.HostTestFixtures;
+import com.example.event.SponsorTestFixtures;
 import com.example.event.domain.value.Host;
 import com.example.event.domain.value.Sponsor;
 import com.example.event.domain.value.Venue;
@@ -25,12 +28,12 @@ class EventTest {
         public void shouldThrowExceptionWhenEndDateIsBeforeStartDate() {
 
             //given
-            String eventName = EventTestFixtures.EVENT_NAME;
-            Venue eventVenue = EventTestFixtures.eventVenue;
-            Host host = EventTestFixtures.host;
-            Sponsor sponsor = EventTestFixtures.sponsor;
-            LocalDateTime eventStartDateTime = EventTestFixtures.startDateTime;
-            Announcement announcement = EventTestFixtures.announcement;
+            String eventName = "OO 이벤트";
+            Venue eventVenue = new Venue("서울 올림픽 공원",100);
+            Host host = HostTestFixtures.createHost();
+            Sponsor sponsor = SponsorTestFixtures.createSponsor();
+            LocalDateTime eventStartDateTime = LocalDateTime.now().plusDays(4);
+            Announcement announcement = AnnouncementTestFixtures.createAnnouncement();
 
             //when
             LocalDateTime eventEndDateTime = eventStartDateTime.minusDays(1);
@@ -50,11 +53,11 @@ class EventTest {
         public void addEventStartDateTime() {
 
             //given
-            String eventName = EventTestFixtures.EVENT_NAME;
-            Venue eventVenue = EventTestFixtures.eventVenue;
-            Host host = EventTestFixtures.host;
-            Sponsor sponsor = EventTestFixtures.sponsor;
-            Announcement announcement = EventTestFixtures.announcement;
+            String eventName = "OO 이벤트";
+            Venue eventVenue = new Venue("서울 올림픽 공원",100);
+            Host host = HostTestFixtures.createHost();
+            Sponsor sponsor = SponsorTestFixtures.createSponsor();
+            Announcement announcement = AnnouncementTestFixtures.createAnnouncement();
 
             //when
             LocalDateTime eventStartDateTime = LocalDateTime.now().plusDays(2);
@@ -80,11 +83,11 @@ class EventTest {
         public void createEventSuccessfully() {
 
             //given
-            String eventName = EventTestFixtures.EVENT_NAME;
-            Venue eventVenue = EventTestFixtures.eventVenue;
-            Host host = EventTestFixtures.host;
-            Sponsor sponsor = EventTestFixtures.sponsor;
-            Announcement announcement = EventTestFixtures.announcement;
+            String eventName = "OO 이벤트";
+            Venue eventVenue = new Venue("서울 올림픽 공원",100);
+            Host host = HostTestFixtures.createHost();
+            Sponsor sponsor = SponsorTestFixtures.createSponsor();
+            Announcement announcement = AnnouncementTestFixtures.createAnnouncement();
 
             //when
             LocalDateTime eventStartDateTime = LocalDateTime.now().plusDays(4);

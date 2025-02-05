@@ -7,12 +7,12 @@ import java.time.LocalDateTime;
 
 public class TicketTestFixtures {
 
-    public static final int price = 100;
-    public static final int stock = 100;
-    public static final TicketType typeVIP = new TicketType("VIP");
-    public static final Event event = EventTestFixtures.createEvent();
-    public static final LocalDateTime releaseDateTime = event.getStartDateTime().minusDays(13);
-    public static final LocalDateTime deadLineDateTime = releaseDateTime.plusDays(3);
+    private static final int price = 100;
+    private static final int stock = 100;
+    private static final TicketType typeVIP = new TicketType("VIP");
+    private static final Event event = EventTestFixtures.createEvent();
+    private static final LocalDateTime releaseDateTime = event.getStartDateTime().minusDays(13);
+    private static final LocalDateTime deadLineDateTime = releaseDateTime.plusDays(3);
 
     public static TicketInventory createTicketInventoryOfEvent(
         Event event

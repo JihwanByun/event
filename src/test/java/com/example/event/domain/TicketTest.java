@@ -25,10 +25,10 @@ public class TicketTest {
             Event event = EventTestFixtures.createEvent();
             TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(
                 event);
-            int ticketPrice = TicketTestFixtures.price;
-            LocalDateTime releasedDateTime = TicketTestFixtures.releaseDateTime;
-            LocalDateTime deadLineDateTime = TicketTestFixtures.deadLineDateTime;
-            TicketType ticketType = TicketTestFixtures.typeVIP;
+            int ticketPrice = 1000;
+            LocalDateTime releasedDateTime = LocalDateTime.now().plusDays(5);
+            LocalDateTime deadLineDateTime = LocalDateTime.now().plusDays(6);
+            TicketType ticketType = new TicketType("VIP");
 
             //when
             int ticketStock = 0;
@@ -53,9 +53,9 @@ public class TicketTest {
 
             //given
             Event event = EventTestFixtures.createEvent();
-            TicketType ticketType = TicketTestFixtures.typeVIP;
-            int stock = TicketTestFixtures.stock;
-            int price = TicketTestFixtures.price;
+            TicketType ticketType = new TicketType("VIP");
+            int stock = 10;
+            int price = 1000;
             TicketInventory ticketInventory = TicketInventory.createTicketInventoryOfEvent(event);
 
             //when
@@ -89,8 +89,8 @@ public class TicketTest {
             Event event = EventTestFixtures.createEvent();
             TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(
                 event);
-            int stock = TicketTestFixtures.stock; //100개
-            TicketType ticketType = TicketTestFixtures.typeVIP;
+            int stock = 100;
+            TicketType ticketType = new TicketType("VIP");
 
             //when
             int numberOfBuyingTicket = 2;
