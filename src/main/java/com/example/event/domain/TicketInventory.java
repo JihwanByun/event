@@ -87,9 +87,9 @@ public class TicketInventory {
     private static void validateTicketReleasedTime(LocalDateTime eventStartDateTime,
         LocalDateTime releasedDateTime,
         LocalDateTime deadLineDateTime) {
-        if (releasedDateTime.isAfter(deadLineDateTime) || releasedDateTime.isBefore(
-            eventStartDateTime.minusDays(30)) || deadLineDateTime.isAfter(
-            eventStartDateTime.minusDays(10))
+        if (releasedDateTime.isAfter(deadLineDateTime) ||
+            releasedDateTime.isBefore(eventStartDateTime.minusDays(30)) ||
+            deadLineDateTime.isAfter(eventStartDateTime.minusDays(10))
         ) {
             throw new TicketReleasedDateTimeException();
         }
