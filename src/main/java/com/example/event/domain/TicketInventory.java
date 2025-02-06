@@ -7,6 +7,7 @@ import com.example.event.exception.ticket.TicketReleasedDateTimeException;
 import com.example.event.exception.ticket.TicketTypeNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,6 @@ public class TicketInventory {
     private final Event event;
     @Getter
     private final Map<TicketType, List<Ticket>> availableTickets;
-    @Getter
     private final Map<TicketType, List<Ticket>> soldTickets;
 
 
@@ -32,6 +32,14 @@ public class TicketInventory {
 
     public int getTotalTicketQuantity() {
         return availableTickets.values().stream().mapToInt(List::size).sum();
+    }
+
+    public List<Ticket> findAvailableTicketsByType(TicketType ticketType) {
+        return availableTickets.getOrDefault(ticketType, Collections.emptyList());
+    }
+
+    public List<Ticket> findSoldTicketsByType(TicketType ticketType) {
+        return soldTickets.getOrDefault(ticketType, Collections.emptyList());
     }
 
     public void addTickets(TicketType ticketType, int stock, int price,

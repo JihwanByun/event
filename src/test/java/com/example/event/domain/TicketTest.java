@@ -5,6 +5,7 @@ import com.example.event.TicketTestFixtures;
 import com.example.event.domain.value.TicketType;
 import com.example.event.exception.event.TicketStockNegativeException;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -66,14 +67,14 @@ public class TicketTest {
                 ticketDeadLineDateTime);
 
             //then
-            assertThat(
-                ticketInventory.getAvailableTickets().get(ticketType).get(0)
-                    .getReleaseDateTime()).isEqualTo(
-                ticketReleaseDateTime);
-            assertThat(
-                ticketInventory.getAvailableTickets().get(ticketType).get(0)
-                    .getDeadLineDateTime()).isEqualTo(
-                ticketDeadLineDateTime);
+            List<Ticket> enrolledTickets = ticketInventory.findAvailableTicketsByType(ticketType);
+
+            assertThat(enrolledTickets.size()).isEqualTo(stock);
+            assertThat(enrolledTickets)
+                .allSatisfy(ticket -> {
+                    assertThat(ticket.getReleaseDateTime()).isEqualTo(ticketReleaseDateTime);
+                    assertThat(ticket.getDeadLineDateTime()).isEqualTo(ticketDeadLineDateTime);
+                });
         }
     }
 
@@ -97,11 +98,14 @@ public class TicketTest {
             ticketInventory.buyTicketWithType(numberOfBuyingTicket, ticketType);
 
             //then
-            assertThat(ticketInventory.getAvailableTickets().get(ticketType).size()).isEqualTo(
+            List<Ticket> availableTickets = ticketInventory.findAvailableTicketsByType(ticketType);
+            List<Ticket> soldTickets = ticketInventory.findSoldTicketsByType(ticketType);
+
+            assertThat(availableTickets.size()).isEqualTo(
                 stock - numberOfBuyingTicket);
-            assertThat(ticketInventory.getSoldTickets().get(ticketType).size()).isEqualTo(
+            assertThat(soldTickets.size()).isEqualTo(
                 numberOfBuyingTicket);
-            assertThat(ticketInventory.getSoldTickets().get(ticketType).stream()
+            assertThat(soldTickets.stream()
                 .allMatch(ticket -> ticket.getStatus() == TicketStatus.SOLD)).isTrue();
 
         }
