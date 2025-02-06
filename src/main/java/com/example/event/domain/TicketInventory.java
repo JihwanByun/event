@@ -18,6 +18,7 @@ import lombok.Getter;
 
 public class TicketInventory {
 
+    @Getter
     private final Event event;
     private final Map<TicketType, List<Ticket>> availableTickets;
     private final Map<TicketType, List<Ticket>> soldTickets;
@@ -34,11 +35,13 @@ public class TicketInventory {
     }
 
     public List<Ticket> findAvailableTicketsByType(TicketType ticketType) {
-        return availableTickets.getOrDefault(ticketType, Collections.emptyList());
+        return Collections.unmodifiableList(
+            availableTickets.getOrDefault(ticketType, Collections.emptyList()));
     }
 
     public List<Ticket> findSoldTicketsByType(TicketType ticketType) {
-        return soldTickets.getOrDefault(ticketType, Collections.emptyList());
+        return Collections.unmodifiableList(
+            soldTickets.getOrDefault(ticketType, Collections.emptyList()));
     }
 
     public void addTickets(TicketType ticketType, int stock, int price,
