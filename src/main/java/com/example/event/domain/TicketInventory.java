@@ -19,7 +19,6 @@ import lombok.Getter;
 public class TicketInventory {
 
     private final Event event;
-    @Getter
     private final Map<TicketType, List<Ticket>> availableTickets;
     private final Map<TicketType, List<Ticket>> soldTickets;
 
