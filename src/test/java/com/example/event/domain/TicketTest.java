@@ -1,16 +1,17 @@
 package com.example.event.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.example.event.EventTestFixtures;
 import com.example.event.TicketTestFixtures;
 import com.example.event.domain.value.TicketType;
 import com.example.event.exception.event.TicketStockNegativeException;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.*;
 
 public class TicketTest {
 
@@ -24,57 +25,16 @@ public class TicketTest {
 
             //given
             Event event = EventTestFixtures.createEvent();
-            TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(
-                event);
-            int ticketPrice = 1000;
-            LocalDateTime releasedDateTime = LocalDateTime.now().plusDays(5);
-            LocalDateTime deadLineDateTime = LocalDateTime.now().plusDays(6);
-            TicketType ticketType = new TicketType("VIP");
+            TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(event);
 
             //when
-            int ticketStock = 0;
+            List<Ticket> tickets = new ArrayList<>();
 
             //then
             assertThatThrownBy(
-                () -> ticketInventory.addTickets(ticketType, ticketStock, ticketPrice,
-                    releasedDateTime,
-                    deadLineDateTime))
-                .isInstanceOf(TicketStockNegativeException.class)
-                .hasMessage(TicketStockNegativeException.createMessage(ticketStock));
-        }
-    }
-
-    @Nested
-    @DisplayName("티켓 판매 등록 성공 케이스")
-    class TicketCreationSuccessTests {
-
-        @Test
-        @DisplayName("티켓은 이벤트 시작 30일 이전부터 10일전까지만 판매할 수 있다.")
-        void createTicketOnlyEventStartBefore30DayBetween10Day() {
-
-            //given
-            Event event = EventTestFixtures.createEvent();
-            TicketType ticketType = new TicketType("VIP");
-            int stock = 10;
-            int price = 1000;
-            TicketInventory ticketInventory = TicketInventory.createTicketInventoryOfEvent(event);
-
-            //when
-            LocalDateTime eventStartDateTime = event.getStartDateTime();
-            LocalDateTime ticketReleaseDateTime = event.getStartDateTime().minusDays(30);
-            LocalDateTime ticketDeadLineDateTime = event.getStartDateTime().minusDays(10);
-            ticketInventory.addTickets(ticketType, stock, price, ticketReleaseDateTime,
-                ticketDeadLineDateTime);
-
-            //then
-            List<Ticket> enrolledTickets = ticketInventory.findAvailableTicketsByType(ticketType);
-
-            assertThat(enrolledTickets.size()).isEqualTo(stock);
-            assertThat(enrolledTickets)
-                .allSatisfy(ticket -> {
-                    assertThat(ticket.getReleaseDateTime()).isEqualTo(ticketReleaseDateTime);
-                    assertThat(ticket.getDeadLineDateTime()).isEqualTo(ticketDeadLineDateTime);
-                });
+                    () -> ticketInventory.addTickets(tickets))
+                    .isInstanceOf(TicketStockNegativeException.class)
+                    .hasMessage(TicketStockNegativeException.createMessage(tickets.size()));
         }
     }
 
@@ -89,9 +49,11 @@ public class TicketTest {
             //given
             Event event = EventTestFixtures.createEvent();
             TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(
-                event);
+                    event);
             int stock = 100;
-            TicketType ticketType = new TicketType("VIP");
+            TicketType ticketType = TicketType.VIP;
+            List<Ticket> tickets = TicketTestFixtures.addTicketsWithTypeAndQuantity(ticketType, stock);
+            ticketInventory.addTickets(tickets);
 
             //when
             int numberOfBuyingTicket = 2;
@@ -101,13 +63,11 @@ public class TicketTest {
             List<Ticket> availableTickets = ticketInventory.findAvailableTicketsByType(ticketType);
             List<Ticket> soldTickets = ticketInventory.findSoldTicketsByType(ticketType);
 
-            assertThat(availableTickets.size()).isEqualTo(
-                stock - numberOfBuyingTicket);
-            assertThat(soldTickets.size()).isEqualTo(
-                numberOfBuyingTicket);
+            assertThat(availableTickets.size()).isEqualTo(stock - numberOfBuyingTicket);
+            assertThat(soldTickets.size()).isEqualTo(numberOfBuyingTicket);
             assertThat(soldTickets.stream()
-                .allMatch(ticket -> ticket.getStatus() == TicketStatus.SOLD)).isTrue();
-
+                    .allMatch(ticket -> ticket.getStatus() == TicketStatus.SOLD))
+                    .isTrue();
         }
     }
 }

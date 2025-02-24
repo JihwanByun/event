@@ -1,9 +1,12 @@
 package com.example.event.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.example.event.AnnouncementTestFixtures;
-import com.example.event.EventTestFixtures;
 import com.example.event.HostTestFixtures;
 import com.example.event.SponsorTestFixtures;
+import com.example.event.VenueTestFixtures;
 import com.example.event.domain.value.Host;
 import com.example.event.domain.value.Sponsor;
 import com.example.event.domain.value.Venue;
@@ -13,8 +16,6 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.*;
 
 class EventTest {
 
@@ -29,7 +30,7 @@ class EventTest {
 
             //given
             String eventName = "OO 이벤트";
-            Venue eventVenue = new Venue("서울 올림픽 공원",100);
+            Venue eventVenue = new Venue("서울 올림픽 공원", 100);
             Host host = HostTestFixtures.createHost();
             Sponsor sponsor = SponsorTestFixtures.createSponsor();
             LocalDateTime eventStartDateTime = LocalDateTime.now().plusDays(4);
@@ -40,12 +41,12 @@ class EventTest {
 
             //then
             assertThatThrownBy(
-                () -> Event.createEvent(eventName, eventVenue, host, sponsor,
-                    eventStartDateTime,
-                    eventEndDateTime, announcement))
-                .isInstanceOf(EventCreateEndDateException.class)
-                .hasMessage(EventCreateEndDateException.createMessage(eventEndDateTime,
-                    eventStartDateTime));
+                    () -> Event.createEvent(eventName, eventVenue, host, sponsor,
+                            eventStartDateTime,
+                            eventEndDateTime, announcement))
+                    .isInstanceOf(EventCreateEndDateException.class)
+                    .hasMessage(EventCreateEndDateException.createMessage(eventEndDateTime,
+                            eventStartDateTime));
         }
 
         @Test
@@ -54,7 +55,7 @@ class EventTest {
 
             //given
             String eventName = "OO 이벤트";
-            Venue eventVenue = new Venue("서울 올림픽 공원",100);
+            Venue eventVenue = VenueTestFixtures.createVenue();
             Host host = HostTestFixtures.createHost();
             Sponsor sponsor = SponsorTestFixtures.createSponsor();
             Announcement announcement = AnnouncementTestFixtures.createAnnouncement();
@@ -65,10 +66,10 @@ class EventTest {
 
             //then
             assertThatThrownBy(
-                () -> Event.createEvent(eventName, eventVenue, host, sponsor,
-                    eventStartDateTime, eventEndDateTime, announcement))
-                .isInstanceOf(EventCreateStartDateException.class)
-                .hasMessage(EventCreateStartDateException.createMessage(eventStartDateTime));
+                    () -> Event.createEvent(eventName, eventVenue, host, sponsor,
+                            eventStartDateTime, eventEndDateTime, announcement))
+                    .isInstanceOf(EventCreateStartDateException.class)
+                    .hasMessage(EventCreateStartDateException.createMessage(eventStartDateTime));
         }
     }
 
@@ -79,12 +80,12 @@ class EventTest {
 
         @Test
         @DisplayName("이벤트 시작 시간이 현재 시간 기준 3일 이후이고, 종료 시간은 시작 시간보다 이후이며,"
-            + " 판매 가능한 티켓 수는 1장 이상일 때, 이벤트를 생성할 수 있다.")
+                + " 판매 가능한 티켓 수는 1장 이상일 때, 이벤트를 생성할 수 있다.")
         public void createEventSuccessfully() {
 
             //given
             String eventName = "OO 이벤트";
-            Venue eventVenue = new Venue("서울 올림픽 공원",100);
+            Venue eventVenue = new Venue("서울 올림픽 공원", 100);
             Host host = HostTestFixtures.createHost();
             Sponsor sponsor = SponsorTestFixtures.createSponsor();
             Announcement announcement = AnnouncementTestFixtures.createAnnouncement();
@@ -93,9 +94,9 @@ class EventTest {
             LocalDateTime eventStartDateTime = LocalDateTime.now().plusDays(4);
             LocalDateTime eventEndDateTime = eventStartDateTime.plusDays(1);
             Event event = Event.createEvent(eventName, eventVenue, host, sponsor,
-                eventStartDateTime,
-                eventEndDateTime,
-                announcement);
+                    eventStartDateTime,
+                    eventEndDateTime,
+                    announcement);
 
             //then
             assertThat(event).isNotNull();
