@@ -1,14 +1,26 @@
 package com.example.event.domain.value;
 
 
-import lombok.EqualsAndHashCode;
+import com.example.event.exception.ticket.TicketTypeNotFoundException;
+import java.util.Arrays;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-@EqualsAndHashCode
-public class TicketType {
+@Getter
+@RequiredArgsConstructor
+public enum TicketType {
 
-    private final String ticketType;
+    VIP("VIP"),
+    R("R석"),
+    S("S석");
 
-    public TicketType(String ticketType) {
-        this.ticketType = ticketType;
+    private final String value;
+
+    public static TicketType from(String value) {
+        return Arrays.stream(TicketType.values())
+                .filter(type -> type.getValue().equalsIgnoreCase(value))
+                .findFirst()
+                .orElseThrow(() -> new TicketTypeNotFoundException(value));
     }
+
 }
