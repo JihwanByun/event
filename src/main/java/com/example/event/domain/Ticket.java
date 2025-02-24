@@ -1,38 +1,31 @@
 package com.example.event.domain;
 
 import com.example.event.domain.value.TicketType;
-import java.time.LocalDateTime;
 import lombok.Getter;
 
 public class Ticket {
 
+    private final Event event;
     private final int price;
     @Getter
     private TicketStatus status;
+    @Getter
     private final TicketType type;
-    @Getter
-    private final LocalDateTime releaseDateTime;
-    @Getter
-    private final LocalDateTime deadLineDateTime;
+
     private final TransactionHistory transactionHistory;
 
-    private Ticket(int price, TicketType type, LocalDateTime releaseDateTime,
-        LocalDateTime deadLineDateTime, TransactionHistory transactionHistory) {
+    private Ticket(Event event, int price, TicketType type, TransactionHistory transactionHistory) {
+        this.event = event;
         this.price = price;
         this.type = type;
         this.status = TicketStatus.NOT_RELEASED;
-        this.releaseDateTime = releaseDateTime;
-        this.deadLineDateTime = deadLineDateTime;
         this.transactionHistory = transactionHistory;
     }
 
-    public static Ticket createTicket(int price, TicketType type, LocalDateTime releaseDateTime,
-        LocalDateTime deadLineDateTime) {
+    public static Ticket createTicket(Event event, int price, TicketType type) {
 
-        return new Ticket(price, type, releaseDateTime, deadLineDateTime, new TransactionHistory());
+        return new Ticket(event, price, type, new TransactionHistory());
     }
-
-
 
     public void setTicketStatusForSale() {
         this.status = TicketStatus.FOR_SALE;

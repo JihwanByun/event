@@ -9,11 +9,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import lombok.Getter;
 
 public class TicketInventory {
@@ -22,86 +19,90 @@ public class TicketInventory {
     private final Event event;
     private final Map<TicketType, List<Ticket>> availableTickets;
     private final Map<TicketType, List<Ticket>> soldTickets;
+    @Getter
+    private final LocalDateTime ticketReleaseDateTime;
+    @Getter
+    private final LocalDateTime ticketSaleDeadLineDateTime;
 
-
-    private TicketInventory(Event event) {
+    private TicketInventory(Event event, LocalDateTime ticketReleaseDateTime,
+                            LocalDateTime ticketSaleDeadLineDateTime) {
         this.event = event;
         this.availableTickets = new HashMap<>();
         this.soldTickets = new HashMap<>();
+        this.ticketReleaseDateTime = ticketReleaseDateTime;
+        this.ticketSaleDeadLineDateTime = ticketSaleDeadLineDateTime;
     }
 
     public int getTotalTicketQuantity() {
-        return availableTickets.values().stream().mapToInt(List::size).sum();
+        int totalTicketQuantity = availableTickets.values().stream().mapToInt(List::size).sum() +
+                soldTickets.values().stream().mapToInt(List::size).sum();
+        return totalTicketQuantity;
     }
 
     public List<Ticket> findAvailableTicketsByType(TicketType ticketType) {
         return Collections.unmodifiableList(
-            availableTickets.getOrDefault(ticketType, Collections.emptyList()));
+                availableTickets.getOrDefault(ticketType, Collections.emptyList()));
     }
 
     public List<Ticket> findSoldTicketsByType(TicketType ticketType) {
         return Collections.unmodifiableList(
-            soldTickets.getOrDefault(ticketType, Collections.emptyList()));
+                soldTickets.getOrDefault(ticketType, Collections.emptyList()));
     }
 
-    public void addTickets(TicketType ticketType, int stock, int price,
-        LocalDateTime releaseDateTime, LocalDateTime deadLineDateTime) {
+    public void addTickets(List<Ticket> tickets) {
 
-        validateTotalTicketNumber(stock);
-        validateTicketReleasedTime(this.event.getStartDateTime(), releaseDateTime,
-            deadLineDateTime);
-
-        this.availableTickets.putIfAbsent(ticketType, new LinkedList<>());
-        List<Ticket> newTickets = IntStream.range(0, stock)
-            .mapToObj(
-                value -> Ticket.createTicket(price, ticketType, releaseDateTime,
-                    deadLineDateTime))
-            .collect(Collectors.toCollection(ArrayList::new));
-
-        this.availableTickets.put(ticketType, newTickets);
+        validateTotalTicketNumber(tickets.size());
+        for (Ticket ticket : tickets) {
+            this.availableTickets
+                    .computeIfAbsent(ticket.getType(), k -> new ArrayList<>())
+                    .add(ticket);
+        }
     }
 
     public void buyTicketWithType(int quantity, TicketType ticketType) {
 
         if (!this.availableTickets.containsKey(ticketType)) {
-            throw new TicketTypeNotFoundException();
+            throw new TicketTypeNotFoundException(ticketType.getValue());
         }
-        if (this.availableTickets.get(ticketType).size() < quantity) {
-            throw new TicketOutOfStockException();
+
+        int stock = this.availableTickets.get(ticketType).size();
+        if (stock < quantity) {
+            throw new TicketOutOfStockException(stock);
         }
 
         List<Ticket> purchasedTickets = availableTickets.get(ticketType)
-            .stream()
-            .limit(quantity)
-            .peek(Ticket::setTicketStatusSold)
-            .toList();
+                .stream()
+                .limit(quantity)
+                .peek(Ticket::setTicketStatusSold)
+                .toList();
 
         this.soldTickets.computeIfAbsent(ticketType, k -> new ArrayList<>())
-            .addAll(purchasedTickets);
+                .addAll(purchasedTickets);
 
         purchasedTickets.forEach(
-            purchaserdTicket -> this.availableTickets.get(ticketType)
-                .removeIf(availableTicket -> availableTicket == purchaserdTicket));
+                purchaserdTicket -> this.availableTickets.get(ticketType)
+                        .removeIf(availableTicket -> availableTicket == purchaserdTicket));
     }
 
-    public static TicketInventory createTicketInventoryOfEvent(Event event) {
-        return new TicketInventory(event);
-    }
-
-    public static void validateTotalTicketNumber(int totalTicketCnt) {
-        if (totalTicketCnt <= 0) {
-            throw new TicketStockNegativeException(totalTicketCnt);
-        }
+    public static TicketInventory createTicketInventoryOfEventWithSalesDuration(Event event,
+                                                                                LocalDateTime ticketReleaseDateTime,
+                                                                                LocalDateTime ticketSaleDeadLineDateTime) {
+        return new TicketInventory(event, ticketReleaseDateTime, ticketSaleDeadLineDateTime);
     }
 
     private static void validateTicketReleasedTime(LocalDateTime eventStartDateTime,
-        LocalDateTime releasedDateTime,
-        LocalDateTime deadLineDateTime) {
+                                                   LocalDateTime releasedDateTime,
+                                                   LocalDateTime deadLineDateTime) {
         if (releasedDateTime.isAfter(deadLineDateTime) ||
-            releasedDateTime.isBefore(eventStartDateTime.minusDays(30)) ||
-            deadLineDateTime.isAfter(eventStartDateTime.minusDays(10))
-        ) {
-            throw new TicketReleasedDateTimeException();
+                releasedDateTime.isBefore(eventStartDateTime.minusDays(30)) ||
+                deadLineDateTime.isAfter(eventStartDateTime.minusDays(10))) {
+            throw new TicketReleasedDateTimeException(releasedDateTime);
+        }
+    }
+
+    private static void validateTotalTicketNumber(int totalTicketCnt) {
+        if (totalTicketCnt <= 0) {
+            throw new TicketStockNegativeException(totalTicketCnt);
         }
     }
 }
