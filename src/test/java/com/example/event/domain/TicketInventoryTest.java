@@ -50,7 +50,6 @@ public class TicketInventoryTest {
         @Test
         @DisplayName("티켓의 재고가 구매 수량보다 많고, 존재하는 티켓 Type에 대해서만 구매할 수 있다.")
         void buyTicketWithStatusAndStockSuccessfully() {
-
             //given
             Event event = EventTestFixtures.createEvent();
             TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(
@@ -64,11 +63,10 @@ public class TicketInventoryTest {
             //when
             int numberOfBuyingTicket = 2;
             ticketInventory.buyTicketWithTypeAndQuantity(ticketType, numberOfBuyingTicket);
-
-            //then
             List<Ticket> availableTickets = ticketInventory.findAvailableTicketsByType(ticketType);
             List<Ticket> soldTickets = ticketInventory.findSoldTicketsByType(ticketType);
 
+            //then
             assertThat(availableTickets.size()).isEqualTo(stock - numberOfBuyingTicket);
             assertThat(soldTickets.size()).isEqualTo(numberOfBuyingTicket);
             assertThat(soldTickets.stream()
@@ -89,16 +87,18 @@ public class TicketInventoryTest {
             TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(
                 event);
             TicketType typeVIP = TicketType.VIP;
+            List<Ticket> addedTicketTypeVIP = TicketTestFixtures.addTicketsWithTypeAndQuantity(
+                typeVIP,
+                100);
+            ticketInventory.addTickets(addedTicketTypeVIP);
 
-            //when
-            List<Ticket> tickets = TicketTestFixtures.addTicketsWithTypeAndQuantity(typeVIP, 100);
-            ticketInventory.addTickets(tickets);
+            TicketType typeR = TicketType.R;
 
-            //then
+            //when & then
             assertThatThrownBy(
-                () -> ticketInventory.buyTicketWithTypeAndQuantity(TicketType.R, 10))
+                () -> ticketInventory.buyTicketWithTypeAndQuantity(typeR, 10))
                 .isInstanceOf(TicketTypeNotFoundException.class)
-                .hasMessage(TicketTypeNotFoundException.createMessage(TicketType.R.getValue()));
+                .hasMessage(TicketTypeNotFoundException.createMessage(typeR.getValue()));
         }
 
         @Test
@@ -109,14 +109,15 @@ public class TicketInventoryTest {
             TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(
                 event);
             TicketType typeVIP = TicketType.VIP;
-
-            //when
-            List<Ticket> tickets = TicketTestFixtures.addTicketsWithTypeAndQuantity(typeVIP, 100);
+            int stock = 100;
+            List<Ticket> tickets = TicketTestFixtures.addTicketsWithTypeAndQuantity(typeVIP, stock);
             ticketInventory.addTickets(tickets);
 
-            //then
+            int buyQuantity = tickets.size() + 1;
+
+            //when & then
             assertThatThrownBy(
-                () -> ticketInventory.buyTicketWithTypeAndQuantity(typeVIP, tickets.size() + 1))
+                () -> ticketInventory.buyTicketWithTypeAndQuantity(typeVIP, buyQuantity))
                 .isInstanceOf(TicketOutOfStockException.class)
                 .hasMessage(TicketOutOfStockException.createMessage(tickets.size()));
         }
@@ -129,16 +130,14 @@ public class TicketInventoryTest {
         @Test
         @DisplayName("판매할 티켓 수가 0장 이하인 경우 예외가 발생한다.")
         void shouldThrowExceptionWhenTotalTicketNumberIsZeroOrNegative() {
-
             //given
             Event event = EventTestFixtures.createEvent();
             TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(
                 event);
 
-            //when
             List<Ticket> tickets = new ArrayList<>();
 
-            //then
+            //then & then
             assertThatThrownBy(
                 () -> ticketInventory.addTickets(tickets))
                 .isInstanceOf(TicketStockNegativeException.class)
@@ -146,18 +145,16 @@ public class TicketInventoryTest {
         }
 
         @Test
-        @DisplayName("티켓 판매 시작 날짜가 이벤트 시작 날짜보다 30일 초과로 빠르면 예외가 발생한다.")
+        @DisplayName("티켓 판매 시작 날짜가 이벤트 시작 날짜보다 31일 이상 빠르면 예외가 발생한다.")
         void shouldThrowExceptionWhenReleasedTimeIsEarlierThanEventStartDateMore30Days() {
-
             //given
             Event event = EventTestFixtures.createEvent();
-
-            //when
             LocalDateTime eventStartDateTime = event.getStartDateTime();
-            LocalDateTime releasedDate = eventStartDateTime.minusDays(31);
             LocalDateTime deadlineDate = eventStartDateTime.plusDays(2);
 
-            //then
+            LocalDateTime releasedDate = eventStartDateTime.minusDays(31);
+
+            //when & then
             assertThatThrownBy(
                 () -> TicketInventory.createTicketInventoryOfEventWithSalesDuration(
                     event, releasedDate, deadlineDate))
@@ -168,16 +165,14 @@ public class TicketInventoryTest {
         @Test
         @DisplayName("티켓 판매 마감 날짜가 이벤트 시작 날짜보다 10일 이전이면 예외가 발생한다.")
         void shouldThrowExceptionWhenDeadLineTimeIsEarlierThanEventStartDateLess10Days() {
-
             //given
             Event event = EventTestFixtures.createEvent();
-
-            //when
             LocalDateTime eventStartDateTime = event.getStartDateTime();
             LocalDateTime releasedDate = eventStartDateTime.minusDays(12);
+
             LocalDateTime deadlineDate = eventStartDateTime.minusDays(9);
 
-            //then
+            //when & then
             assertThatThrownBy(
                 () -> TicketInventory.createTicketInventoryOfEventWithSalesDuration(
                     event, releasedDate, deadlineDate))
@@ -188,16 +183,14 @@ public class TicketInventoryTest {
         @Test
         @DisplayName("티켓 판매 마감 날짜가 판매 시작 날짜보다 빠르면 예외가 발생한다.")
         void shouldThrowExceptionWhenDeadLineTimeIsEarlierThanReleasedTime() {
-
             //given
             Event event = EventTestFixtures.createEvent();
-
-            //when
             LocalDateTime eventStartDateTime = event.getStartDateTime();
             LocalDateTime releasedDate = eventStartDateTime.minusDays(12);
+
             LocalDateTime deadlineDate = releasedDate.minusDays(1);
 
-            //then
+            //when & then
             assertThatThrownBy(
                 () -> TicketInventory.createTicketInventoryOfEventWithSalesDuration(
                     event, releasedDate, deadlineDate))
@@ -209,7 +202,6 @@ public class TicketInventoryTest {
     @Test
     @DisplayName("판매된 티켓과 판매 중인 티켓 전체 티켓을 가져올 수 있다.")
     void getTotalTicketsEnrolled() {
-
         //given
         Event event = EventTestFixtures.createEvent();
         TicketInventory ticketInventory = TicketTestFixtures.createTicketInventoryOfEvent(event);
@@ -220,10 +212,10 @@ public class TicketInventoryTest {
 
         //when
         int totalTickets = ticketInventory.getTotalTicketQuantity();
+        int availableTickets = ticketInventory.findAvailableTicketsByType(ticketType).size();
+        int soldTickets = ticketInventory.findSoldTicketsByType(ticketType).size();
 
         //then
-        assertThat(totalTickets).isEqualTo(
-            ticketInventory.findAvailableTicketsByType(ticketType).size() +
-                ticketInventory.findSoldTicketsByType(ticketType).size());
+        assertThat(totalTickets).isEqualTo(availableTickets + soldTickets);
     }
 }
