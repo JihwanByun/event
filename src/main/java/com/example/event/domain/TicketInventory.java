@@ -25,7 +25,7 @@ public class TicketInventory {
     private final LocalDateTime ticketSaleDeadLineDateTime;
 
     private TicketInventory(Event event, LocalDateTime ticketReleaseDateTime,
-                            LocalDateTime ticketSaleDeadLineDateTime) {
+        LocalDateTime ticketSaleDeadLineDateTime) {
         this.event = event;
         this.availableTickets = new HashMap<>();
         this.soldTickets = new HashMap<>();
@@ -35,18 +35,18 @@ public class TicketInventory {
 
     public int getTotalTicketQuantity() {
         int totalTicketQuantity = availableTickets.values().stream().mapToInt(List::size).sum() +
-                soldTickets.values().stream().mapToInt(List::size).sum();
+            soldTickets.values().stream().mapToInt(List::size).sum();
         return totalTicketQuantity;
     }
 
     public List<Ticket> findAvailableTicketsByType(TicketType ticketType) {
         return Collections.unmodifiableList(
-                availableTickets.getOrDefault(ticketType, Collections.emptyList()));
+            availableTickets.getOrDefault(ticketType, Collections.emptyList()));
     }
 
     public List<Ticket> findSoldTicketsByType(TicketType ticketType) {
         return Collections.unmodifiableList(
-                soldTickets.getOrDefault(ticketType, Collections.emptyList()));
+            soldTickets.getOrDefault(ticketType, Collections.emptyList()));
     }
 
     public void addTickets(List<Ticket> tickets) {
@@ -54,12 +54,12 @@ public class TicketInventory {
         validateTotalTicketNumber(tickets.size());
         for (Ticket ticket : tickets) {
             this.availableTickets
-                    .computeIfAbsent(ticket.getType(), k -> new ArrayList<>())
-                    .add(ticket);
+                .computeIfAbsent(ticket.getType(), k -> new ArrayList<>())
+                .add(ticket);
         }
     }
 
-    public void buyTicketWithType(int quantity, TicketType ticketType) {
+    public void buyTicketWithTypeAndQuantity(TicketType ticketType, int quantity) {
 
         if (!this.availableTickets.containsKey(ticketType)) {
             throw new TicketTypeNotFoundException(ticketType.getValue());
@@ -71,31 +71,34 @@ public class TicketInventory {
         }
 
         List<Ticket> purchasedTickets = availableTickets.get(ticketType)
-                .stream()
-                .limit(quantity)
-                .peek(Ticket::setTicketStatusSold)
-                .toList();
+            .stream()
+            .limit(quantity)
+            .peek(Ticket::setTicketStatusSold)
+            .toList();
 
         this.soldTickets.computeIfAbsent(ticketType, k -> new ArrayList<>())
-                .addAll(purchasedTickets);
+            .addAll(purchasedTickets);
 
         purchasedTickets.forEach(
-                purchaserdTicket -> this.availableTickets.get(ticketType)
-                        .removeIf(availableTicket -> availableTicket == purchaserdTicket));
+            purchaserdTicket -> this.availableTickets.get(ticketType)
+                .removeIf(availableTicket -> availableTicket == purchaserdTicket));
     }
 
     public static TicketInventory createTicketInventoryOfEventWithSalesDuration(Event event,
-                                                                                LocalDateTime ticketReleaseDateTime,
-                                                                                LocalDateTime ticketSaleDeadLineDateTime) {
+        LocalDateTime ticketReleaseDateTime,
+        LocalDateTime ticketSaleDeadLineDateTime) {
+
+        validateTicketReleasedTime(event.getStartDateTime(), ticketReleaseDateTime,
+            ticketSaleDeadLineDateTime);
         return new TicketInventory(event, ticketReleaseDateTime, ticketSaleDeadLineDateTime);
     }
 
     private static void validateTicketReleasedTime(LocalDateTime eventStartDateTime,
-                                                   LocalDateTime releasedDateTime,
-                                                   LocalDateTime deadLineDateTime) {
+        LocalDateTime releasedDateTime,
+        LocalDateTime deadLineDateTime) {
         if (releasedDateTime.isAfter(deadLineDateTime) ||
-                releasedDateTime.isBefore(eventStartDateTime.minusDays(30)) ||
-                deadLineDateTime.isAfter(eventStartDateTime.minusDays(10))) {
+            releasedDateTime.isBefore(eventStartDateTime.minusDays(30)) ||
+            deadLineDateTime.isAfter(eventStartDateTime.minusDays(10))) {
             throw new TicketReleasedDateTimeException(releasedDateTime);
         }
     }
