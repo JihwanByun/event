@@ -1,42 +1,41 @@
 package com.example.event.domain;
 
 import com.example.event.domain.value.TicketType;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import lombok.Getter;
 
 public class Ticket {
 
+    private final Event event;
     private final int price;
+    @Getter
     private TicketStatus status;
+    @Getter
     private final TicketType type;
-    private final LocalDateTime releaseDateTime;
-    private final LocalDateTime deadLineDateTime;
+
     private final TransactionHistory transactionHistory;
 
-    private Ticket(int price, TicketType type, LocalDateTime releaseDateTime,
-        LocalDateTime deadLineDateTime, TransactionHistory transactionHistory) {
+    private Ticket(Event event, int price, TicketType type, TransactionHistory transactionHistory) {
+        this.event = event;
         this.price = price;
         this.type = type;
-        this.releaseDateTime = releaseDateTime;
-        this.deadLineDateTime = deadLineDateTime;
+        this.status = TicketStatus.NOT_RELEASED;
         this.transactionHistory = transactionHistory;
     }
 
-    public static Ticket createTicket(int price, TicketType type, LocalDateTime releaseDateTime,
-        LocalDateTime deadLineDateTime) {
+    public static Ticket createTicket(Event event, int price, TicketType type) {
 
-        return new Ticket(price, type, releaseDateTime, deadLineDateTime, new TransactionHistory(new ArrayList<>()));
+        return new Ticket(event, price, type, new TransactionHistory());
     }
 
-    public void setTicketStatusForSale(Ticket ticket) {
-        ticket.status = TicketStatus.FOR_SALE;
+    public void setTicketStatusForSale() {
+        this.status = TicketStatus.FOR_SALE;
     }
 
-    public void setTicketStatusNotReleased(Ticket ticket) {
-        ticket.status = TicketStatus.NOT_RELEASED;
+    public void setTicketStatusNotReleased() {
+        this.status = TicketStatus.NOT_RELEASED;
     }
 
-    public void setTicketStatusSold(Ticket ticket) {
-        ticket.status = TicketStatus.SOLD;
+    public void setTicketStatusSold() {
+        this.status = TicketStatus.SOLD;
     }
 }
